@@ -1,31 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/NavBar";
-import Login from "./Login";
-
+import Login from "./Pages/LoginPage";
+import AdminDashboard from "./Pages/AdminDashboard";
+import SupportDashboard from "./Pages/SupportDashboard";
+import UserDashboard from "./Pages/UserDashboard";
+import ProfilePage from "./Pages/ProfilePage";
 function App() {
-  const [userType, setUserType] = useState(null); // Na početku nema prijavljenog korisnika
-
+  const [userType, setUserType] = useState(null);
+ 
+  useEffect(() => {
+    const storedUserType = window.sessionStorage.getItem("user_type");
+    if (storedUserType) {
+      setUserType(storedUserType);
+    }
+  }, []);
+ 
   const handleLoginSuccess = (type) => {
-    setUserType(type); // Postavljamo tip korisnika kada se uspešno prijavi
+    setUserType(type);
   };
-
+ 
   return (
-    <div>
-      {!userType ? (
-        // Ako korisnik nije prijavljen, prikazujemo Login komponentu
-        <Login onLoginSuccess={handleLoginSuccess} />
-      ) : (
-        // Ako je korisnik prijavljen, prikazujemo Navbar i sadržaj
-        <>
-          <Navbar userType={userType} />
-          <div style={{ padding: "20px" }}>
-            <h2>Welcome to e-Banking!</h2>
-            <p>Prikazivanje sadržaja zavisi od korisničkog tipa!</p>
-          </div>
-        </>
-      )}
-    </div>
+    <Router>
+      <div>
+        {userType && <Navbar userType={userType} />}{" "}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !userType ? (
+                <Login onLoginSuccess={handleLoginSuccess} />
+              ) : (
+                <div>
+                  {userType === "admin" && <AdminDashboard />}
+                  {userType === "support" && <SupportDashboard />}
+                  {userType === "user" && <UserDashboard />}
+                </div>
+              )
+            }
+          />
+          <Route
+            path="/login"
+            element={<Login onLoginSuccess={handleLoginSuccess} />}
+          />
+          <Route path="/user/profile" element={<ProfilePage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
-
+ 
 export default App;
+ 

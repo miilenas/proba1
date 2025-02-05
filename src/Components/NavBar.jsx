@@ -1,81 +1,79 @@
 import React from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+ 
 const Navbar = ({ userType }) => {
+  const navigate = useNavigate();
   const getLinksForUser = (userType) => {
     switch (userType) {
       case "admin":
         return [
-          { name: "Manage users", path: "/manage-users" },
-          { name: "Manage accounts", path: "/manage-accounts" },
-          { name: "Manage transaction categories", path: "/manage-categories" },
-          { name: "Manage employees", path: "/manage-empoyees" },
-          { name: "Logout", path: "/logout" },
+          { name: "Manage Users", path: "/manage-users" },
+          { name: "Manage Accounts", path: "/manage-accounts" },
+          { name: "Manage Categories", path: "/manage-categories" },
+          { name: "Manage Employees", path: "/manage-employees" },
+          { name: "Logout", path: "/logout", action: true },
         ];
       case "user":
         return [
           { name: "Currencies", path: "/currencies" },
           { name: "Messages", path: "/messages" },
-          { name: "Profile", path: "/profile" },
-          { name: "Logout", path: "/logout" },
+          { name: "Profile", path: "/user/profile" },
+          { name: "Logout", path: "/logout", action: true },
         ];
       case "support":
-        return [
-          { name: "Logout", path: "/logout" },
-        ];
-      case "untautorized":
-        return [
-          { name: "Logout", path: "/logout" },
-        ];
+        return [{ name: "Logout", path: "/logout", action: true }];
+      case "unauthorized":
+        return [{ name: "Login", path: "/login" }];
       default:
         return [];
     }
   };
-
+ 
   const links = getLinksForUser(userType);
-
+ 
+  const handleLogout = () => {
+    window.sessionStorage.removeItem("user_type");
+    window.sessionStorage.removeItem("access_token");
+    navigate("/login");
+  };
+ 
   return (
-    <nav style={styles.navbar}>
-      <div style={styles.logo}>
-        <h1>e-Banking</h1>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="#">
+          e-Banking
+        </a>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            {links.map((link, index) => (
+              <li className="nav-item" key={index}>
+                {link.action ? (
+                  <button className="nav-link border-0" onClick={handleLogout}>
+                    {link.name}
+                  </button>
+                ) : (
+                  <Link className="nav-link" to={link.path}>
+                    {link.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <ul style={styles.navLinks}>
-        {links.map((link, index) => (
-          <li key={index}>
-            <a href={link.path} style={styles.link}>
-              {link.name}
-            </a>
-          </li>
-        ))}
-      </ul>
     </nav>
   );
 };
-
-const styles = {
-  navbar: {
-    display: "flex",
-    width:"96vw",
-    height:60,
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "1rem 1rem",
-    backgroundColor: "#ffcfd2",
-  },
-  logo: {
-    fontSize: "2rem",
-    color: "#6d6875",
-  },
-  navLinks: {
-    listStyleType: "none",
-    display: "flex",
-    gap: "2rem",
-  },
-  link: {
-    textDecoration: "none",
-    color: "#6d6875",
-    fontSize: "1.1rem",
-    transition: "color 0.3s",
-  },
-};
-
+ 
 export default Navbar;
