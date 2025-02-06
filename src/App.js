@@ -6,6 +6,9 @@ import AdminDashboard from "./Pages/AdminDashboard";
 import SupportDashboard from "./Pages/SupportDashboard";
 import UserDashboard from "./Pages/UserDashboard";
 import ProfilePage from "./Pages/ProfilePage";
+import CategoryPage from "./Pages/CategoryPage";
+import RegisterEmployeePage from "./Pages/RegisterEmployeePage";
+
 function App() {
   const [userType, setUserType] = useState(null);
  
@@ -44,6 +47,10 @@ function App() {
             element={<Login onLoginSuccess={handleLoginSuccess} />}
           />
           <Route path="/user/profile" element={<ProfilePage />} />
+
+          <Route path="/admin/category" element={<CategoryPage />} />
+
+          <Route path="/register" element={<RegisterEmployeePage />} />
         </Routes>
       </div>
     </Router>

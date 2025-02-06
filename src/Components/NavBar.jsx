@@ -9,8 +9,8 @@ const Navbar = ({ userType }) => {
         return [
           { name: "Manage Users", path: "/manage-users" },
           { name: "Manage Accounts", path: "/manage-accounts" },
-          { name: "Manage Categories", path: "/manage-categories" },
-          { name: "Manage Employees", path: "/manage-employees" },
+          { name: "Manage Categories", path: "/admin/category" },
+          { name: "Manage Employees", path: "/register" },
           { name: "Logout", path: "/logout", action: true },
         ];
       case "user":
