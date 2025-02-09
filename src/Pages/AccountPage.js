@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CategoryCard from "../Components/CategoryCard";
+import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 
 const AccountPage = () => {
   const [accounts, setAccounts] = useState([]);
   const [owners, setOwners] = useState([]);
-const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]); 
+  const [currencies, setCurrencies] = useState([]); 
   const [showModalAdd, setShowModalAdd] = useState(false);
-  const [showModalEdit, setShowModalEdit] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState(null);
   const [formData, setFormData] = useState({
     account_number: "",
     balance: "",
@@ -23,7 +21,7 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => {
-      setOwners(response.data.users); // Pretpostavljam da vraća listu korisnika
+      setOwners(response.data.users); 
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -44,8 +42,21 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
           console.error("Error fetching accounts:", error);
         });
     }
+    console.log(accounts);
   }, [token]);
 
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/currency", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      setCurrencies(response.data.currencies); 
+    })
+    .catch((error) => {
+      console.error("Error fetching currency:", error);
+    });
+  }, [token]);
+  
   const handleDelete = (accountId) => {
     axios
       .delete(`http://127.0.0.1:8000/api/admin/account/${accountId}`, {
@@ -61,51 +72,30 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
       });
   };
 
-  const handleOpenEditModal = (account) => {
-    setSelectedAccount({ ...account });
-    setShowModalEdit(true);
-  };
 
-  const handleEdit = (formData) => {
-    axios
-      .put(
-        `http://127.0.0.1:8000/api/admin/account/${selectedAccount.id}`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then((response) => {
-        setAccounts((prevAccounts) =>
-          prevAccounts.map((acc) =>
-            acc.id === selectedAccount.id ? response.data.account : acc
-          )
-        );
-        setShowModalEdit(false);
-        setSelectedAccount(null);
-      })
-      .catch((error) => {
-        console.error("Error editing account:", error);
-      });
-  };
 
  const handleAdd = (formData) => {
-  // Debugging: Proverite formData pre slanja
   console.log("Form data being sent:", formData);
-
-  // Kreirajte objekat formData sa svim potrebnim podacima
+  const balance = parseFloat(formData.balance);
   const dataToSend = {
     account_number: formData.account_number,
-    balance: formData.balance,
+    balance: balance,
     type: formData.type,
-    currency: formData.currency, // Ovo sada treba da bude ceo objekat
-    owner: formData.owner, // Ovo treba da bude ceo objekat
+    currency_id: formData.currency, 
+    owner_id: formData.owner, 
   };
+
+  console.log(dataToSend);
 
   axios
     .post("http://127.0.0.1:8000/api/admin/account", dataToSend, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => {
-      setAccounts((prevAccounts) => [...prevAccounts, response.data]);
+      setAccounts((prevAccounts) => [
+        ...prevAccounts,
+        response.data.account, 
+      ]);
       setShowModalAdd(false);
     })
     .catch((error) => {
@@ -137,15 +127,16 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
 
         {accounts.length > 0 ? (
           accounts.map((account) => (
-            <CategoryCard
+            <Card
               key={account.id}
-              category={{
+              title={account.account_number}
+              data={{
                 id: account.id,
                 type: account.type,
-                description: `Owner: ${account.owner.first_name} ${account.owner.last_name} | Balance: ${account.balance} ${account.currency.name}`,
+                Owner: ` ${account.owner.first_name} ${account.owner.last_name}`,
+                 balance: `${account.balance} ${account.currency.name}`,
               }}
               onDelete={() => handleDelete(account.id)}
-              onEdit={() => handleOpenEditModal(account)}
             />
           ))
         ) : (
@@ -160,27 +151,26 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
   fields={[
     { name: "account_number", label: "Account Number", type: "text", required: true },
     { name: "balance", label: "Balance", type: "number", required: true },
+    { name: "type", label: "Type", type: "text", required: true },
     {
       name: "currency",
       label: "Currency",
       type: "checkbox", 
-      options: [
-        { value: "RSD", label: "RSD" },
-        { value: "EUR", label: "EUR" },
-        { value: "USD", label: "USD" },
-      ],
+      options: currencies.map((c) => ({ value: c.id, label: `${c.name}` })),
       onChange: (e) => {
+       // const selectedCurrency = e.target.value;
         setFormData((prev) => ({
           ...prev,
-          currency: e.target.value,
-          type: e.target.value === "RSD" ? "RSD Account" : "Foreign Exchange",
+          currency: e.target.value.name,
+         // currencies: selectedCurrency,
+         // type: selectedCurrency === "RSD" ? "RSD Account" : "Foreign Exchange", // Postavljanje 'type' na osnovu valute
         }));
       },
     },
     {
       name: "owner",
       label: "Owner",
-      type: "checkbox", // Promenili smo na radio dugmadi
+      type: "checkbox",
       options: owners.map((o) => ({ value: o.id, label: `${o.first_name} ${o.last_name}` })),
       onChange: (e) => {
         setFormData((prev) => ({
@@ -193,43 +183,6 @@ const [currencies, setCurrencies] = useState(["USD", "EUR", "RSD"]);
   onSubmit={handleAdd}
   formData={formData}
   setFormData={setFormData}
-/>
-
-<Modal
-  show={showModalEdit}
-  onClose={() => setShowModalEdit(false)}
-  fields={[
-    { name: "account_number", label: "Account Number", type: "text", required: true },
-    { name: "balance", label: "Balance", type: "number", required: true },
-    {
-      name: "currency",
-      label: "Currency",
-      type: "checkbox", 
-      options: currencies.map((c) => ({ value: c, label: c })),
-      onChange: (e) => {
-        setSelectedAccount((prev) => ({
-          ...prev,
-          currency: e.target.value,
-          type: e.target.value === "RSD" ? "RSD Account" : "Foreign Exchange",
-        }));
-      },
-    },
-    {
-      name: "owner",
-      label: "Owner",
-      type: "checkbox", 
-      options: owners.map((o) => ({ value: o.id, label: `${o.first_name} ${o.last_name}` })),
-      onChange: (e) => {
-        setSelectedAccount((prev) => ({
-          ...prev,
-          owner: e.target.value,
-        }));
-      },
-    },
-  ]}
-  onSubmit={handleEdit}
-  formData={selectedAccount}
-  setFormData={setSelectedAccount}
 />
 
 

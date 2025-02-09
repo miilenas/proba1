@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CategoryCard from "../Components/CategoryCard";
+import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 
 const CategoryPage = () => {
@@ -12,7 +12,7 @@ const CategoryPage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [alertMessage, setAlertMessage] = useState(""); 
+  //const [alertMessage, setAlertMessage] = useState(""); 
 
 
   const token = sessionStorage.getItem("access_token");
@@ -86,7 +86,7 @@ const CategoryPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((response) => {
-        setCategories((prevCategories) => [...prevCategories, response.data]);
+        setCategories((prevCategories) => [...prevCategories, response.data.category]);
         setShowModalAdd(false);
       })
       .catch((error) => {
@@ -117,9 +117,10 @@ const CategoryPage = () => {
 
         {categories.length > 0 ? (
           categories.map((category) => (
-            <CategoryCard
+            <Card
               key={category.id}
-              category={category}
+              title={category.type}
+              data={category.description}
               onDelete={handleDelete}
               onEdit={handleOpenEditModal}
             />

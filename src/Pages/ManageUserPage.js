@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UserCard from "../Components/UserCard";
+import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 
 const ManageUserPage = () => {
@@ -64,7 +64,7 @@ const ManageUserPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((response) => {
-        setUsers((prevUsers) => [...prevUsers, response.data]);
+        setUsers((prevUsers) => [...prevUsers, response.data.user]);
         setShowModalAdd(false);
         setFormData({ jmbg: "", first_name: "", last_name: "", email: "", password: "" });
       })
@@ -96,7 +96,16 @@ const ManageUserPage = () => {
         </div>
         {users.length > 0 ? (
           users.map((user) => (
-            <UserCard key={user.id} user={user} onEdit={handleOpenEditModal} buttonType="update" />
+            <Card
+              key={user.id}
+              title={`${user.first_name} ${user.last_name}`}
+              data={{
+                id: user.id,
+                jmbg: user.jmbg,
+                email: user.email
+              }}
+              onEdit={() => handleEdit(user)}
+            />
           ))
         ) : (
           <p>No users available.</p>
