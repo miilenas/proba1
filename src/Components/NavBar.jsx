@@ -15,7 +15,7 @@ const Navbar = ({ userType }) => {
         ];
       case "user":
         return [
-          { name: "Currencies", path: "/currencies" },
+          { name: "Currencies", path: "/currency" },
           { name: "Messages", path: "/user/messages" },
           { name: "Profile", path: "/user/profile" },
           { name: "Logout", path: "/logout", action: true },

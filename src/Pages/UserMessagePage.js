@@ -24,18 +24,21 @@ axios
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/user/messages")
+      .get("http://127.0.0.1:8000/api/user/messages", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
         console.log("Fetched messages:", response.data);
-        setMessages(response.data.messages); // Pristupamo kroz `messages`
+        setMessages(response.data.messages);
       })
       .catch((error) => {
         console.error("Error fetching messages:", error);
       });
-  }, []);
+  }, [token]);
 
   const handleAddMessage = (formData) => {
-    const token = sessionStorage.getItem("access_token");
+    const updatedMessage = { ...formData, id: Date.now() }; 
+    setMessages((prevMessages) => [updatedMessage, ...prevMessages]);
   
     axios
       .post(
@@ -44,12 +47,16 @@ axios
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((response) => {
-        setMessages((prevMessages) => [...prevMessages, response.data]);
+        setMessages((prevMessages) =>
+          prevMessages.map((message) =>
+            message.id === updatedMessage.id ? response.data : message
+          )
+        );
         setShowModal(false);
-       // setShowModal({ title: "", content: "" });
       })
       .catch((error) => {
         console.error("Error adding message:", error);
+        setMessages((prevMessages) => prevMessages.filter((message) => message.id !== updatedMessage.id));
       });
   };
   

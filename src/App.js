@@ -11,6 +11,7 @@ import RegisterEmployeePage from "./Pages/RegisterEmployeePage";
 import ManageUserPage from "./Pages/ManageUserPage";
 import ManageAccountPage from "./Pages/AccountPage";
 import UserMessagePage from "./Pages/UserMessagePage";
+import CurrencyPage from "./Pages/CurrencyPage";
 
 
 function App() {
@@ -61,6 +62,8 @@ function App() {
           <Route path="/admin/accounts" element={<ManageAccountPage/>} />
 
           <Route path="/user/messages" element={<UserMessagePage/>} />
+
+          <Route path="/currency" element={<CurrencyPage/>} />
 
           
 
