@@ -51,8 +51,8 @@ const CategoryPage = () => {
 
   const handleOpenEditModal = (category) => {
     if (category) {
-      setSelectedCategory({ ...category }); // Postavljamo izabranu kategoriju
-      setShowModalEdit(true); // Otvaramo modal za editovanje
+      setSelectedCategory({ ...category }); 
+      setShowModalEdit(true); 
     }
   };
   
@@ -71,7 +71,7 @@ const CategoryPage = () => {
           )
         );
         setShowModalEdit(false);
-        setSelectedCategory(null); // Resetujemo selektovanu kategoriju
+        setSelectedCategory(null);
       })
       .catch((error) => {
         console.error("Error editing category:", error);
@@ -103,7 +103,7 @@ const CategoryPage = () => {
         <div
             className="card add-category-card"
             onClick={() => {
-              setFormData({ type: "", description: "" }); // Resetovanje formData
+              setFormData({ type: "", description: "" }); 
               setShowModalAdd(true);
             }}
             style={{ cursor: "pointer", textAlign: "center", padding: "20px" }}
@@ -137,8 +137,8 @@ const CategoryPage = () => {
           { name: "description", label: "Description", type: "text", required: true },
         ]}
         onSubmit={handleAdd}
-        formData={formData} // Dodajemo formData da bude dostupan u modalu
-        setFormData={setFormData} // Omogućavamo ažuriranje input polja
+        formData={formData} 
+        setFormData={setFormData} 
       />
 
       <Modal

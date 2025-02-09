@@ -8,6 +8,10 @@ import UserDashboard from "./Pages/UserDashboard";
 import ProfilePage from "./Pages/ProfilePage";
 import CategoryPage from "./Pages/CategoryPage";
 import RegisterEmployeePage from "./Pages/RegisterEmployeePage";
+import ManageUserPage from "./Pages/ManageUserPage";
+import ManageAccountPage from "./Pages/AccountPage";
+import UserMessagePage from "./Pages/UserMessagePage";
+
 
 function App() {
   const [userType, setUserType] = useState(null);
@@ -44,13 +48,24 @@ function App() {
           />
           <Route
             path="/login"
-            element={<Login onLoginSuccess={handleLoginSuccess} />}
+            element={<Login onLoginSuccess={handleLoginSuccess}/>}
           />
-          <Route path="/user/profile" element={<ProfilePage />} />
+          <Route path="/user/profile" element={<ProfilePage/>} />
 
-          <Route path="/admin/category" element={<CategoryPage />} />
+          <Route path="/admin/category" element={<CategoryPage/>} />
 
-          <Route path="/register" element={<RegisterEmployeePage />} />
+          <Route path="/register" element={<RegisterEmployeePage/>} />
+
+          <Route path="/admin/users" element={<ManageUserPage/>} />
+
+          <Route path="/admin/accounts" element={<ManageAccountPage/>} />
+
+          <Route path="/user/messages" element={<UserMessagePage/>} />
+
+          
+
+         
+
         </Routes>
       </div>
     </Router>

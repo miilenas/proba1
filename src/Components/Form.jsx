@@ -1,52 +1,43 @@
-import React, { useState } from "react";
-const Form = ({ fields, formData, handleInputChange, showRadio }) => {
+import React from "react";
+import CheckboxGroupField from "./CheckboxGroupField";
+
+const Form = ({ fields, formData, setFormData, handleInputChange }) => {
   return (
     <form>
       {fields.map((field) => (
         <div key={field.name} className="mb-3">
-          <label htmlFor={field.name} className="form-label">
-            {field.label}
-          </label>
-          <input
-            type={field.type}
-            name={field.name}
-            value={formData[field.name] || ""}
-            onChange={handleInputChange}
-            className="form-control"
-            required={field.required}
-          />
+          {/* Ako je checkbox grupa, koristi CheckboxGroupField */}
+          {field.type === "checkbox" && field.options ? (
+            <CheckboxGroupField
+              label={field.label}
+              name={field.name}
+              options={field.options}
+              value={formData[field.name] || ""}
+              onChange={(selectedValue) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  [field.name]: selectedValue,
+                }))
+              }
+            />
+          ) : (
+            // Ostali inputi ostaju isti
+            <div>
+              <label className="form-label">{field.label}</label>
+              <input
+                type={field.type}
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={handleInputChange}
+                className="form-control"
+                required={field.required}
+              />
+            </div>
+          )}
         </div>
       ))}
-
-      {showRadio && (
-        <div className="mb-3">
-          <label className="form-label">Role</label>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="role"
-              value="support"
-              checked={formData.role === "support"}
-              onChange={handleInputChange}
-            />
-            <label className="form-check-label">Support</label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="role"
-              value="admin"
-              checked={formData.role === "admin"}
-              onChange={handleInputChange}
-            />
-            <label className="form-check-label">Admin</label>
-          </div>
-        </div>
-      )}
     </form>
   );
 };
 
-export default Form
+export default Form;

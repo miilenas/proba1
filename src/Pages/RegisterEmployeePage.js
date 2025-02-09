@@ -5,28 +5,27 @@ import AlertMessage from "../Components/AlertMessage";
 
 const RegisterEmployeePage = () => {
   const [formData, setFormData] = useState({ email: "", password: "", role: "support" });
-  const [errorMessage, setErrorMessage] = useState(""); // Za prikaz greške
-  const [successMessage, setSuccessMessage] = useState(""); // Za prikaz uspeha
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState(""); 
   const [showForm, setShowForm] = useState(true);
   const token = window.sessionStorage.getItem("access_token");
 
-  // Funkcija za promenu input polja
-  const handleInputChange = (e) => {
+    const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Funkcija za registraciju
+  
   const handleRegister = (e) => {
     e.preventDefault();
 
-    // Provera da li su sva polja popunjena
+    
     if (!formData.email || !formData.password || !formData.role) {
       setErrorMessage("Fill in all fields!");
       return;
     }
 
-    console.log("Sending data:", formData); // Provera podataka pre slanja
+    console.log("Sending data:", formData); 
 
     axios
       .post(
@@ -37,7 +36,7 @@ const RegisterEmployeePage = () => {
       .then((response) => {
         console.log("Response from backend:", response.data);
 
-        // Čuvamo access token koji je backend vratio
+
         if (response.data.access_token) {
           window.sessionStorage.setItem("access_token", response.data.access_token);
           console.log("Token saved in sessionStorage:", response.data.access_token);
@@ -45,7 +44,7 @@ const RegisterEmployeePage = () => {
 
         setSuccessMessage("User successfully registered!");
         setErrorMessage("");
-        setShowForm(false); // Sakrijemo formu nakon uspešne registracije
+        setShowForm(false); 
       })
       .catch((error) => {
         console.error("Error registering user:", error);
@@ -57,11 +56,11 @@ const RegisterEmployeePage = () => {
     <div className="container mt-5">
       <h2 className="text-center">Register Employee</h2>
 
-      {/* Prikaz alerta za grešku ili uspeh */}
+      
       {errorMessage && <AlertMessage message={errorMessage} />}
       {successMessage && <AlertMessage message={successMessage} />}
 
-      {/* Forma za registraciju */}
+     
       {showForm && (
         <form onSubmit={handleRegister}>
           <Form
@@ -73,7 +72,7 @@ const RegisterEmployeePage = () => {
             handleInputChange={handleInputChange}
           />
 
-          {/* Radio button za izbor role */}
+        
           <div className="mb-3">
             <label className="form-label">Role</label>
             <div className="form-check">
@@ -100,7 +99,6 @@ const RegisterEmployeePage = () => {
             </div>
           </div>
 
-          {/* Dugme za registraciju */}
           <button type="submit" className="btn btn-primary">Register</button>
         </form>
       )}

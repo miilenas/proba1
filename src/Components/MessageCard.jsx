@@ -1,6 +1,6 @@
 import React from "react";
  
-const MessageCard = ({ message, onSolve }) => {
+const MessageCard = ({ message, onSolve, hideSolveButton }) => {
   return (
     <div className="col-md-4 mb-4">
       <div className="card">
@@ -15,14 +15,12 @@ const MessageCard = ({ message, onSolve }) => {
             {message.reviewed_by || "Not Reviewed"}
           </p>
  
-          {message.status === "pending" && (
-            <button
-              className="btn btn-success"
-              onClick={() => onSolve(message.id)}
-            >
+          {!hideSolveButton && message.status === "pending" && (
+            <button className="btn btn-success" onClick={() => onSolve(message.id)}>
               Mark as Solved
             </button>
           )}
+          
         </div>
       </div>
     </div>

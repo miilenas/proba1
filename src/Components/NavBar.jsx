@@ -7,8 +7,8 @@ const Navbar = ({ userType }) => {
     switch (userType) {
       case "admin":
         return [
-          { name: "Manage Users", path: "/manage-users" },
-          { name: "Manage Accounts", path: "/manage-accounts" },
+          { name: "Manage Users", path: "/admin/users" },
+          { name: "Manage Accounts", path: "admin/accounts" },
           { name: "Manage Categories", path: "/admin/category" },
           { name: "Manage Employees", path: "/register" },
           { name: "Logout", path: "/logout", action: true },
@@ -16,7 +16,7 @@ const Navbar = ({ userType }) => {
       case "user":
         return [
           { name: "Currencies", path: "/currencies" },
-          { name: "Messages", path: "/messages" },
+          { name: "Messages", path: "/user/messages" },
           { name: "Profile", path: "/user/profile" },
           { name: "Logout", path: "/logout", action: true },
         ];

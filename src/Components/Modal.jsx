@@ -4,10 +4,10 @@ import Form from "./Form";
 
 
 const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
-  if (!formData) return null; // Provera da li je formData definisan
-
+  if (!formData) return null; 
   const handleSubmit = () => {
     onSubmit(formData);
+    setFormData({ title: "", content: "" });
   };
 
   const handleInputChange = (e) => {
@@ -24,14 +24,14 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Edit Category</h5>
+            <h5 className="modal-title">Enter data</h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
             <Form
               fields={fields}
-              formData={formData} // Prosleđujemo formData kako bi bila popunjena
-              setFormData={setFormData} // Omogućavamo promene u formi
+              formData={formData} 
+              setFormData={setFormData} 
               handleInputChange={handleInputChange}
             />
           </div>
