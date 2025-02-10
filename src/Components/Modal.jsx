@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import Form from "./Form";
 
-
-
 const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
-  if (!formData) return null; 
+  if (!formData) return null;
   const handleSubmit = () => {
     onSubmit(formData);
-    setFormData({ title: "", content: "" });
   };
 
   const handleInputChange = (e) => {
@@ -17,7 +14,6 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
       [name]: value,
     }));
   };
-  
 
   return (
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
@@ -25,21 +21,33 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Enter data</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+            ></button>
           </div>
           <div className="modal-body">
             <Form
               fields={fields}
-              formData={formData} 
-              setFormData={setFormData} 
+              formData={formData}
+              setFormData={setFormData}
               handleInputChange={handleInputChange}
             />
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
               Close
             </button>
-            <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSubmit}
+            >
               Save Changes
             </button>
           </div>
@@ -49,4 +57,4 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
   );
 };
 
-export default Modal
+export default Modal;

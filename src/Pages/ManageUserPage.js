@@ -4,7 +4,12 @@ import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 
 const ManageUserPage = () => {
-    const [formData, setFormData] = useState({ jmbg: "", first_name: "", last_name:"",email:"" });  
+  const [formData, setFormData] = useState({
+    jmbg: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
   const [users, setUsers] = useState([]);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
@@ -29,12 +34,13 @@ const ManageUserPage = () => {
 
   const handleOpenEditModal = (user) => {
     if (user) {
-    setSelectedUser({ ...user });
-    setShowModalEdit(true);
+      setSelectedUser({ ...user });
+      setShowModalEdit(true);
     }
   };
 
   const handleEdit = (formData) => {
+    console.log("Podaci za edit", formData);
     axios
       .put(
         `http://127.0.0.1:8000/api/admin/user/${selectedUser.id}`,
@@ -66,7 +72,13 @@ const ManageUserPage = () => {
       .then((response) => {
         setUsers((prevUsers) => [...prevUsers, response.data.user]);
         setShowModalAdd(false);
-        setFormData({ jmbg: "", first_name: "", last_name: "", email: "", password: "" });
+        setFormData({
+          jmbg: "",
+          first_name: "",
+          last_name: "",
+          email: "",
+          password: "",
+        });
       })
       .catch((error) => {
         console.error("Error adding user:", error);
@@ -79,11 +91,16 @@ const ManageUserPage = () => {
       <h2>Available Users</h2>
 
       <div className="row">
-      <div className="col-md-4 mb-4">
-        <div
+        <div className="col-md-4 mb-4">
+          <div
             className="card add-category-card"
             onClick={() => {
-              setFormData({jmbg: "",first_name: "", last_name: "", email: "" }); 
+              setFormData({
+                jmbg: "",
+                first_name: "",
+                last_name: "",
+                email: "",
+              });
               setShowModalAdd(true);
             }}
             style={{ cursor: "pointer", textAlign: "center", padding: "20px" }}
@@ -102,9 +119,9 @@ const ManageUserPage = () => {
               data={{
                 id: user.id,
                 jmbg: user.jmbg,
-                email: user.email
+                email: user.email,
               }}
-              onEdit={() => handleEdit(user)}
+              onEdit={() => handleOpenEditModal(user)}
             />
           ))
         ) : (
@@ -116,8 +133,18 @@ const ManageUserPage = () => {
         show={showModalEdit}
         onClose={() => setShowModalEdit(false)}
         fields={[
-          { name: "first_name", label: "First Name", type: "text", required: true },
-          { name: "last_name", label: "Last Name", type: "text", required: true },
+          {
+            name: "first_name",
+            label: "First Name",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "last_name",
+            label: "Last Name",
+            type: "text",
+            required: true,
+          },
           { name: "email", label: "Email", type: "email", required: true },
         ]}
         onSubmit={handleEdit}
@@ -129,15 +156,30 @@ const ManageUserPage = () => {
         show={showModalAdd}
         onClose={() => setShowModalAdd(false)}
         fields={[
-            { name: "jmbg", label: "Jmbg", type: "text", required: true },
-            { name: "first_name", label: "First Name", type: "text", required: true },
-            { name: "last_name", label: "Last Name", type: "text", required: true },
-            { name: "email", label: "Email", type: "email", required: true },
-            { name: "password", label: "Password", type: "password", required: true },
-          ]}
+          { name: "jmbg", label: "Jmbg", type: "text", required: true },
+          {
+            name: "first_name",
+            label: "First Name",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "last_name",
+            label: "Last Name",
+            type: "text",
+            required: true,
+          },
+          { name: "email", label: "Email", type: "email", required: true },
+          {
+            name: "password",
+            label: "Password",
+            type: "password",
+            required: true,
+          },
+        ]}
         onSubmit={handleAdd}
-        formData={formData} 
-        setFormData={setFormData} 
+        formData={formData}
+        setFormData={setFormData}
       />
     </div>
   );

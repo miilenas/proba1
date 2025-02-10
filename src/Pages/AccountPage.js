@@ -6,28 +6,30 @@ import Modal from "../Components/Modal";
 const AccountPage = () => {
   const [accounts, setAccounts] = useState([]);
   const [owners, setOwners] = useState([]);
-  const [currencies, setCurrencies] = useState([]); 
+  const [currencies, setCurrencies] = useState([]);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [formData, setFormData] = useState({
     account_number: "",
     balance: "",
+    owner_id: "",
+    currency_id: "",
     type: "",
   });
 
   const token = sessionStorage.getItem("access_token");
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/admin/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      setOwners(response.data.users); 
-    })
-    .catch((error) => {
-      console.error("Error fetching users:", error);
-    });
+    axios
+      .get("http://127.0.0.1:8000/api/admin/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setOwners(response.data.users);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   }, [token]);
-  
 
   useEffect(() => {
     if (token) {
@@ -42,21 +44,21 @@ const AccountPage = () => {
           console.error("Error fetching accounts:", error);
         });
     }
-    console.log(accounts);
   }, [token]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/currency", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      setCurrencies(response.data.currencies); 
-    })
-    .catch((error) => {
-      console.error("Error fetching currency:", error);
-    });
+    axios
+      .get("http://127.0.0.1:8000/api/currency", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setCurrencies(response.data.currencies);
+      })
+      .catch((error) => {
+        console.error("Error fetching currency:", error);
+      });
   }, [token]);
-  
+
   const handleDelete = (accountId) => {
     axios
       .delete(`http://127.0.0.1:8000/api/admin/account/${accountId}`, {
@@ -72,37 +74,30 @@ const AccountPage = () => {
       });
   };
 
+  const handleAdd = (formData) => {
+    const currency_id = formData.currency_id || currencies[0]?.id;
+    const owner_id = formData.owner_id || owners[0]?.id;
+    const balance = parseFloat(formData.balance);
+    const dataToSend = {
+      account_number: formData.account_number,
+      balance: balance,
+      type: formData.type,
+      currency_id: currency_id,
+      owner_id: owner_id,
+    };
 
-
- const handleAdd = (formData) => {
-  console.log("Form data being sent:", formData);
-  const balance = parseFloat(formData.balance);
-  const dataToSend = {
-    account_number: formData.account_number,
-    balance: balance,
-    type: formData.type,
-    currency_id: formData.currency, 
-    owner_id: formData.owner, 
+    axios
+      .post("http://127.0.0.1:8000/api/admin/account", dataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setAccounts((prevAccounts) => [...prevAccounts, response.data.account]);
+        setShowModalAdd(false);
+      })
+      .catch((error) => {
+        console.error("Error adding account:", error);
+      });
   };
-
-  console.log(dataToSend);
-
-  axios
-    .post("http://127.0.0.1:8000/api/admin/account", dataToSend, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      setAccounts((prevAccounts) => [
-        ...prevAccounts,
-        response.data.account, 
-      ]);
-      setShowModalAdd(false);
-    })
-    .catch((error) => {
-      console.error("Error adding account:", error);
-    });
-};
-
 
   return (
     <div className="container mt-5">
@@ -113,7 +108,13 @@ const AccountPage = () => {
           <div
             className="card add-category-card"
             onClick={() => {
-              setFormData({ account_number: "", balance: "", type: "" });
+              setFormData({
+                account_number: "",
+                balance: "",
+                type: "",
+                currency_id: "",
+                owner_id: "",
+              });
               setShowModalAdd(true);
             }}
             style={{ cursor: "pointer", textAlign: "center", padding: "20px" }}
@@ -134,7 +135,7 @@ const AccountPage = () => {
                 id: account.id,
                 type: account.type,
                 Owner: ` ${account.owner.first_name} ${account.owner.last_name}`,
-                 balance: `${account.balance} ${account.currency.name}`,
+                balance: `${account.balance} ${account.currency.name}`,
               }}
               onDelete={() => handleDelete(account.id)}
             />
@@ -143,49 +144,56 @@ const AccountPage = () => {
           <p>No accounts available.</p>
         )}
       </div>
-          
 
-<Modal
-  show={showModalAdd}
-  onClose={() => setShowModalAdd(false)}
-  fields={[
-    { name: "account_number", label: "Account Number", type: "text", required: true },
-    { name: "balance", label: "Balance", type: "number", required: true },
-    { name: "type", label: "Type", type: "text", required: true },
-    {
-      name: "currency",
-      label: "Currency",
-      type: "checkbox", 
-      options: currencies.map((c) => ({ value: c.id, label: `${c.name}` })),
-      onChange: (e) => {
-       // const selectedCurrency = e.target.value;
-        setFormData((prev) => ({
-          ...prev,
-          currency: e.target.value.name,
-         // currencies: selectedCurrency,
-         // type: selectedCurrency === "RSD" ? "RSD Account" : "Foreign Exchange", // Postavljanje 'type' na osnovu valute
-        }));
-      },
-    },
-    {
-      name: "owner",
-      label: "Owner",
-      type: "checkbox",
-      options: owners.map((o) => ({ value: o.id, label: `${o.first_name} ${o.last_name}` })),
-      onChange: (e) => {
-        setFormData((prev) => ({
-          ...prev,
-          owner: e.target.value,
-        }));
-      },
-    },
-  ]}
-  onSubmit={handleAdd}
-  formData={formData}
-  setFormData={setFormData}
-/>
-
-
+      <Modal
+        show={showModalAdd}
+        onClose={() => setShowModalAdd(false)}
+        fields={[
+          {
+            name: "account_number",
+            label: "Account Number",
+            type: "text",
+            required: true,
+          },
+          { name: "balance", label: "Balance", type: "number", required: true },
+          { name: "type", label: "Type", type: "text", required: true },
+          {
+            name: "currency_id",
+            label: "Currency",
+            type: "select",
+            options: currencies.map((c) => ({
+              value: c.id,
+              label: `${c.name}`,
+            })),
+            onChange: (e) => {
+              setFormData((prev) => ({
+                ...prev,
+                currency: e.target.value,
+                // currencies: selectedCurrency,
+                // type: selectedCurrency === "RSD" ? "RSD Account" : "Foreign Exchange", // Postavljanje 'type' na osnovu valute
+              }));
+            },
+          },
+          {
+            name: "owner_id",
+            label: "Owner",
+            type: "select",
+            options: owners.map((o) => ({
+              value: o.id,
+              label: `${o.first_name} ${o.last_name}`,
+            })),
+            onChange: (e) => {
+              setFormData((prev) => ({
+                ...prev,
+                owner: e.target.value,
+              }));
+            },
+          },
+        ]}
+        onSubmit={handleAdd}
+        formData={formData}
+        setFormData={setFormData}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
- 
+
 const Navbar = ({ userType }) => {
   const navigate = useNavigate();
   const getLinksForUser = (userType) => {
@@ -28,19 +28,19 @@ const Navbar = ({ userType }) => {
         return [];
     }
   };
- 
+
   const links = getLinksForUser(userType);
- 
+
   const handleLogout = () => {
     window.sessionStorage.removeItem("user_type");
     window.sessionStorage.removeItem("access_token");
     navigate("/login");
   };
- 
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           e-Banking
         </a>
         <button
@@ -75,5 +75,5 @@ const Navbar = ({ userType }) => {
     </nav>
   );
 };
- 
+
 export default Navbar;

@@ -13,21 +13,20 @@ import ManageAccountPage from "./Pages/AccountPage";
 import UserMessagePage from "./Pages/UserMessagePage";
 import CurrencyPage from "./Pages/CurrencyPage";
 
-
 function App() {
   const [userType, setUserType] = useState(null);
- 
+
   useEffect(() => {
     const storedUserType = window.sessionStorage.getItem("user_type");
     if (storedUserType) {
       setUserType(storedUserType);
     }
   }, []);
- 
+
   const handleLoginSuccess = (type) => {
     setUserType(type);
   };
- 
+
   return (
     <Router>
       <div>
@@ -49,31 +48,27 @@ function App() {
           />
           <Route
             path="/login"
-            element={<Login onLoginSuccess={handleLoginSuccess}/>}
+            element={<Login onLoginSuccess={handleLoginSuccess} />}
           />
-          <Route path="/user/profile" element={<ProfilePage/>} />
+          <Route path="/user/profile" element={<ProfilePage />} />
 
-          <Route path="/admin/category" element={<CategoryPage/>} />
+          <Route path="/admin/category" element={<CategoryPage />} />
 
-          <Route path="/register" element={<RegisterEmployeePage/>} />
+          <Route path="/register" element={<RegisterEmployeePage />} />
 
-          <Route path="/admin/users" element={<ManageUserPage/>} />
+          <Route path="/admin/users" element={<ManageUserPage />} />
 
-          <Route path="/admin/accounts" element={<ManageAccountPage/>} />
+          <Route path="/admin/accounts" element={<ManageAccountPage />} />
 
-          <Route path="/user/messages" element={<UserMessagePage/>} />
+          <Route path="/user/messages" element={<UserMessagePage />} />
 
-          <Route path="/currency" element={<CurrencyPage/>} />
+          <Route path="/currency" element={<CurrencyPage />} />
 
-          
-
-         
-
+          <Route path="/user/accounts" element={<UserDashboard />} />
         </Routes>
       </div>
     </Router>
   );
 }
- 
+
 export default App;
- 
