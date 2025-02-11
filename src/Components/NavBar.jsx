@@ -1,8 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ userType }) => {
+const Navbar = ({ userType, onLogout }) => {
   const navigate = useNavigate();
+  console.log(userType);
   const getLinksForUser = (userType) => {
     switch (userType) {
       case "admin":
@@ -34,11 +35,12 @@ const Navbar = ({ userType }) => {
   const handleLogout = () => {
     window.sessionStorage.removeItem("user_type");
     window.sessionStorage.removeItem("access_token");
+    onLogout();
     navigate("/login");
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
           e-Banking

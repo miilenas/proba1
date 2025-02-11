@@ -2,24 +2,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AlertMessage from "../Components/AlertMessage";
- 
+import Form from "../Components/Form";
+
 const Login = ({ onLoginSuccess }) => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
- 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
- 
+
   useEffect(() => {
     const storedUserType = window.sessionStorage.getItem("user_type");
     if (storedUserType) {
       navigate("/", { replace: true });
     }
   }, [navigate]);
- 
+
   function handleLogin(e) {
     e.preventDefault();
     console.log("Login form submitted!");
@@ -32,11 +33,13 @@ const Login = ({ onLoginSuccess }) => {
           window.sessionStorage.setItem("user_type", res.data.user_type);
           console.log("Access token saved in sessionStorage");
           if (onLoginSuccess) {
-            console.log("Login success callback triggered with user type:", res.data.user_type);
+            console.log(
+              "Login success callback triggered with user type:",
+              res.data.user_type
+            );
             onLoginSuccess(res.data.user_type);
             navigate("/", { replace: true });
           }
-          
         } else {
           console.log("Login failed or no access token received.");
         }
@@ -48,40 +51,30 @@ const Login = ({ onLoginSuccess }) => {
         );
       });
   }
- 
+
   return (
     <div className="container mt-5">
       <h2 className="text-center">Login</h2>
       <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value={userData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            name="password"
-            value={userData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
+        <Form
+          fields={[
+            {
+              name: "email",
+              label: "Email",
+              type: "email",
+              required: true,
+            },
+            {
+              name: "password",
+              label: "Password",
+              type: "password",
+              required: true,
+            },
+          ]}
+          formData={userData}
+          handleInputChange={handleInputChange}
+        />
+        <button type="submit" className="btn btn-primary mt-3">
           Login
         </button>
         <AlertMessage message={loginError} />
@@ -89,5 +82,5 @@ const Login = ({ onLoginSuccess }) => {
     </div>
   );
 };
- 
+
 export default Login;

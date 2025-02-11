@@ -12,6 +12,8 @@ import ManageUserPage from "./Pages/ManageUserPage";
 import ManageAccountPage from "./Pages/AccountPage";
 import UserMessagePage from "./Pages/UserMessagePage";
 import CurrencyPage from "./Pages/CurrencyPage";
+import Footer from "./Components/Footer";
+import TransactionPage from "./Pages/TransactionsPage";
 
 function App() {
   const [userType, setUserType] = useState(null);
@@ -27,10 +29,14 @@ function App() {
     setUserType(type);
   };
 
+  const handleLogout = () => {
+    setUserType(null);
+  };
+
   return (
     <Router>
       <div>
-        {userType && <Navbar userType={userType} />}{" "}
+        {userType && <Navbar userType={userType} onLogout={handleLogout} />}{" "}
         <Routes>
           <Route
             path="/"
@@ -65,7 +71,13 @@ function App() {
           <Route path="/currency" element={<CurrencyPage />} />
 
           <Route path="/user/accounts" element={<UserDashboard />} />
+
+          <Route
+            path="/user/account/transactions"
+            element={<TransactionPage />}
+          />
         </Routes>
+        {userType && <Footer />}
       </div>
     </Router>
   );

@@ -7,13 +7,12 @@ const CategoryPage = () => {
   const [formData, setFormData] = useState({
     type: "",
     description: "",
-  });  
+  });
   const [categories, setCategories] = useState([]);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  //const [alertMessage, setAlertMessage] = useState(""); 
-
+  //const [alertMessage, setAlertMessage] = useState("");
 
   const token = sessionStorage.getItem("access_token");
   useEffect(() => {
@@ -33,7 +32,6 @@ const CategoryPage = () => {
   }, [token]);
 
   const handleDelete = (category) => {
-    
     console.log(category);
     axios
       .delete(`http://127.0.0.1:8000/api/admin/category/${category}`, {
@@ -51,12 +49,11 @@ const CategoryPage = () => {
 
   const handleOpenEditModal = (category) => {
     if (category) {
-      setSelectedCategory({ ...category }); 
-      setShowModalEdit(true); 
+      setSelectedCategory({ ...category });
+      setShowModalEdit(true);
     }
   };
-  
-  
+
   const handleEdit = (formData) => {
     axios
       .put(
@@ -67,7 +64,9 @@ const CategoryPage = () => {
       .then((response) => {
         setCategories((prevCategories) =>
           prevCategories.map((category) =>
-            category.id === selectedCategory.id ? response.data.category : category
+            category.id === selectedCategory.id
+              ? response.data.category
+              : category
           )
         );
         setShowModalEdit(false);
@@ -77,16 +76,17 @@ const CategoryPage = () => {
         console.error("Error editing category:", error);
       });
   };
-  
+
   const handleAdd = (formData) => {
     axios
-      .post(
-        "http://127.0.0.1:8000/api/admin/category",
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      .post("http://127.0.0.1:8000/api/admin/category", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
-        setCategories((prevCategories) => [...prevCategories, response.data.category]);
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          response.data.category,
+        ]);
         setShowModalAdd(false);
       })
       .catch((error) => {
@@ -100,10 +100,10 @@ const CategoryPage = () => {
 
       <div className="row">
         <div className="col-md-4 mb-4">
-        <div
+          <div
             className="card add-category-card"
             onClick={() => {
-              setFormData({ type: "", description: "" }); 
+              setFormData({ type: "", description: "" });
               setShowModalAdd(true);
             }}
             style={{ cursor: "pointer", textAlign: "center", padding: "20px" }}
@@ -120,9 +120,12 @@ const CategoryPage = () => {
             <Card
               key={category.id}
               title={category.type}
-              data={category.description}
+              data={category}
+              dataText={{
+                description: category.description,
+              }}
               onDelete={handleDelete}
-              onEdit={handleOpenEditModal}
+              onEdit={() => handleOpenEditModal(category)}
             />
           ))
         ) : (
@@ -134,20 +137,40 @@ const CategoryPage = () => {
         show={showModalAdd}
         onClose={() => setShowModalAdd(false)}
         fields={[
-          { name: "type", label: "Category Type", type: "text", required: true },
-          { name: "description", label: "Description", type: "text", required: true },
+          {
+            name: "type",
+            label: "Category Type",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "description",
+            label: "Description",
+            type: "text",
+            required: true,
+          },
         ]}
         onSubmit={handleAdd}
-        formData={formData} 
-        setFormData={setFormData} 
+        formData={formData}
+        setFormData={setFormData}
       />
 
       <Modal
         show={showModalEdit}
         onClose={() => setShowModalEdit(false)}
         fields={[
-          { name: "type", label: "Category Type", type: "text", required: true },
-          { name: "description", label: "Description", type: "text", required: true },
+          {
+            name: "type",
+            label: "Category Type",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "description",
+            label: "Description",
+            type: "text",
+            required: true,
+          },
         ]}
         onSubmit={handleEdit}
         formData={selectedCategory}
@@ -157,4 +180,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage
+export default CategoryPage;

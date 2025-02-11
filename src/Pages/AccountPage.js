@@ -131,11 +131,11 @@ const AccountPage = () => {
             <Card
               key={account.id}
               title={account.account_number}
-              data={{
-                id: account.id,
-                type: account.type,
+              data={account}
+              dataText={{
+                Type: account.type,
                 Owner: ` ${account.owner.first_name} ${account.owner.last_name}`,
-                balance: `${account.balance} ${account.currency.name}`,
+                Balance: `${account.balance} ${account.currency.name}`,
               }}
               onDelete={() => handleDelete(account.id)}
             />

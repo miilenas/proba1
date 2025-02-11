@@ -81,36 +81,19 @@ const RegisterEmployeePage = () => {
                 type: "password",
                 required: true,
               },
+              {
+                name: "role",
+                label: "Role",
+                type: "radio",
+                options: [
+                  { value: "support", label: "Support" },
+                  { value: "admin", label: "Admin" },
+                ],
+              },
             ]}
             formData={formData}
             handleInputChange={handleInputChange}
           />
-
-          <div className="mb-3">
-            <label className="form-label">Role</label>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="role"
-                value="support"
-                checked={formData.role === "support"}
-                onChange={handleInputChange}
-              />
-              <label className="form-check-label">Support</label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="role"
-                value="admin"
-                checked={formData.role === "admin"}
-                onChange={handleInputChange}
-              />
-              <label className="form-check-label">Admin</label>
-            </div>
-          </div>
 
           <button type="submit" className="btn btn-primary">
             Register

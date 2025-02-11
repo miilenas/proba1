@@ -1,13 +1,13 @@
 import React from "react";
 
-const Card = ({ title, data, onDelete, onEdit }) => {
+const Card = ({ title, data, dataText, onDelete, onEdit }) => {
   return (
     <div className="col-md-4 mb-4">
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
-          {typeof data === "object" && data !== null ? (
-            Object.entries(data).map(([key, value], index) => (
+          {dataText !== null ? (
+            Object.entries(dataText).map(([key, value], index) => (
               <p key={index}>
                 <strong>{key}:</strong> {value}
               </p>
@@ -16,21 +16,19 @@ const Card = ({ title, data, onDelete, onEdit }) => {
             <p>{data}</p>
           )}
 
-
-
           {onDelete && (
-          <button className="btn btn-primary me-2" onClick={() => onDelete(data.id)}>
-            Delete
-          </button>
+            <button
+              className="btn btn-primary me-2"
+              onClick={() => onDelete(data.id)}
+            >
+              Delete
+            </button>
           )}
           {onEdit && (
             <button className="btn btn-warning" onClick={() => onEdit(data)}>
               Update
             </button>
           )}
-
-
-
         </div>
       </div>
     </div>

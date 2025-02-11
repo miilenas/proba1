@@ -17,10 +17,12 @@ const UserDashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          setAccounts(response.data.accounts);
+          const fetchedAccounts = response.data.accounts;
+          setAccounts(fetchedAccounts);
 
-          if (response.data.accounts.length > 0) {
-            setUser(response.data.accounts[0].owner);
+          if (fetchedAccounts.length > 0) {
+            setUser(fetchedAccounts[0].owner);
+            setSelectedAccount(fetchedAccounts[0]);
           }
         })
         .catch((error) => {
@@ -72,6 +74,7 @@ const UserDashboard = () => {
               currency={account.currency.name}
               firstName={account.owner.first_name}
               lastName={account.owner.last_name}
+              isSelected={selectedAccount && selectedAccount.id === account.id}
             />
           </div>
         ))}

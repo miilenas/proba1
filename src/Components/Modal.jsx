@@ -4,6 +4,7 @@ import Form from "./Form";
 const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData }) => {
   if (!formData) return null;
   const handleSubmit = () => {
+    console.log(formData);
     onSubmit(formData);
   };
 

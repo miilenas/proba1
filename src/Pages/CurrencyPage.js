@@ -20,7 +20,8 @@ const CurrencyPage = () => {
             <Card
               key={currency.id}
               title={currency.name}
-              data={{
+              data={currency}
+              dataText={{
                 Date: currency.date,
                 "Exchange rate": currency.exchange_rate,
               }}

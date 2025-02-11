@@ -9,13 +9,14 @@ import {
   Legend,
 } from "chart.js";
 
-// Register necessary chart components
+import { useNavigate } from "react-router-dom";
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
 const CardDetails = ({ account, token }) => {
   const [income, setIncome] = useState(0);
   const [outgoing, setOutgoing] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (account && token) {
@@ -96,6 +97,11 @@ const CardDetails = ({ account, token }) => {
     return date.toISOString().split("T")[0];
   };
 
+  const handleShowAll = () => {
+    console.log(account);
+    navigate("/user/account/transactions", { state: { account } });
+  };
+
   const pieData = {
     labels: ["Income", "Outgoing"],
     datasets: [
@@ -121,9 +127,29 @@ const CardDetails = ({ account, token }) => {
 
   return (
     <div className="container mt-4">
+      <div className="mb-3">
+        <button
+          className="btn m-2"
+          style={{
+            backgroundColor: "#36A2EB",
+            color: "#fff",
+          }}
+        >
+          New Payment
+        </button>
+        <button
+          className="btn"
+          style={{
+            backgroundColor: "#A0C878",
+            color: "#fff",
+          }}
+        >
+          Internal Transfer
+        </button>
+      </div>
       <div className="row">
-        <div className="col-md-4">
-          <h4>Report</h4>
+        <div className="col-md-3">
+          <h4>Last month report</h4>
           <p>
             <strong>Income:</strong> {income} {account.currency.name}
           </p>
@@ -136,11 +162,11 @@ const CardDetails = ({ account, token }) => {
           className="col-md-4"
           style={{ position: "relative", height: "150px" }}
         >
-          <h4>Income vs Outgoing</h4>
+          <h4 className="text-center">Income vs Outgoing</h4>
           <Pie data={pieData} options={pieOptions} />
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-5">
           <h4>Last 5 Transactions</h4>
           <ul className="list-group">
             {transactions.slice(0, 5).map((transaction) => (
@@ -150,7 +176,9 @@ const CardDetails = ({ account, token }) => {
               </li>
             ))}
           </ul>
-          <button className="btn btn-primary mt-3">Show All</button>
+          <button className="btn btn-primary mt-3" onClick={handleShowAll}>
+            Show All
+          </button>
         </div>
       </div>
     </div>

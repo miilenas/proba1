@@ -116,8 +116,8 @@ const ManageUserPage = () => {
             <Card
               key={user.id}
               title={`${user.first_name} ${user.last_name}`}
-              data={{
-                id: user.id,
+              data={user}
+              dataText={{
                 jmbg: user.jmbg,
                 email: user.email,
               }}

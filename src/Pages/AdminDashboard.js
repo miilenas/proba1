@@ -1,5 +1,5 @@
 import React from "react";
- 
+
 const AdminDashboard = () => {
   return (
     <div>
@@ -8,5 +8,5 @@ const AdminDashboard = () => {
     </div>
   );
 };
- 
+
 export default AdminDashboard;

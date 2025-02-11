@@ -7,12 +7,16 @@ const UserCard = ({
   currency,
   firstName,
   lastName,
+  isSelected,
 }) => {
   return (
-    <div className="user-card" style={{ width: "18rem" }}>
+    <div
+      className={`user-card ${isSelected ? "selected" : ""}`}
+      style={{ width: "18rem" }}
+    >
       <div className="user-card-body ">
         <h5 className="user-card-title">Account: {accountNumber}</h5>
-        <h6 className="user-card-subtitle mb-2 text-muted">
+        <h6 className="user-card-text">
           {firstName} {lastName}
         </h6>
         <p className="user-card-text">
