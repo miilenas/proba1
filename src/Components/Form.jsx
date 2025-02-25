@@ -47,6 +47,7 @@ const Form = ({ fields, formData, setFormData, handleInputChange }) => {
               onChange={handleInputChange}
               className="form-control"
               required={field.required}
+              readOnly={field.readOnly || false}
             />
           </div>
         )

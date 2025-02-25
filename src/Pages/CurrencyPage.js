@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Card from "../Components/Card";
 
 const CurrencyPage = () => {
   const [currencies, setCurrencies] = useState([]);
+  const token = sessionStorage.getItem("access_token");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/currency")
-      .then((response) => response.json())
-      .then((data) => setCurrencies(data.currencies))
-      .catch((error) => console.error("Error fetching currencies:", error));
+    axios
+      .get(`http://127.0.0.1:8000/api/currency`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((response) => setCurrencies(response.data.currencies))
+        .catch((error) => console.error("Error fetching currencies:", error));
   }, []);
 
   return (

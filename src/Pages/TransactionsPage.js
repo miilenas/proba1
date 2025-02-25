@@ -20,7 +20,7 @@ const TransactionPage = () => {
           }
         )
         .then((response) => {
-          setTransactions(response.data.transactions);
+          setTransactions([...response.data.transactions].reverse());
           console.log(transactions);
         })
         .catch((error) => {
@@ -38,7 +38,7 @@ const TransactionPage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          responseType: "blob", // Ovo je ključno za preuzimanje fajlova
+          responseType: "blob", 
         }
       )
       .then((response) => {
@@ -64,7 +64,10 @@ const TransactionPage = () => {
             <th>Sender</th>
             <th>Receiver</th>
             <th>Category</th>
-            <th>Date</th>
+            <th
+              onClick = {() => setTransactions((prevTransactions) => [...prevTransactions].reverse())}>
+              Date
+            </th>
             <th>Amount</th>
             <th>Description</th>
             <th>Status</th>

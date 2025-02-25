@@ -8,17 +8,30 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
-const CardDetails = ({ account, token }) => {
+const CardDetails = ({ account, accounts, token }) => {
+  const otherAccounts = accounts && account ? accounts.filter(acc => acc.id !== account.id) : [];
   const [income, setIncome] = useState(0);
   const [outgoing, setOutgoing] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [transaction, setTransaction] = useState([]);
+  const [showModalInternal, setshowModalInternal] = useState(false);
+  const [showModalExternal, setshowModalExternal] = useState(false);  
+  const [category, setCategory] = useState([]);
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    receiver_account_number: "",
+    amount: "",
+    description: "",
+    category_id: "",
+  });
 
   useEffect(() => {
+    if (!account || !token) return;
+
     if (account && token) {
       axios
         .get(
@@ -83,13 +96,28 @@ const CardDetails = ({ account, token }) => {
           }
         )
         .then((response) => {
-          setTransactions(response.data.transactions);
+          setTransactions([...response.data.transactions].reverse());
         })
         .catch((error) => {
           console.error("Error fetching all transactions:", error);
         });
     }
   }, [account, token]);
+
+  useEffect(() => {
+    if (token) {
+    axios
+      .get("http://127.0.0.1:8000/api/category", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response)=>{
+        setCategory(response.data["transaction categories"]);
+      })
+      .catch((error) => {
+        console.error("Error fetching category:", error);
+      });
+    }
+  }, [token]);
 
   const getDate30DaysAgo = () => {
     const date = new Date();
@@ -98,8 +126,38 @@ const CardDetails = ({ account, token }) => {
   };
 
   const handleShowAll = () => {
-    console.log(account);
     navigate("/user/account/transactions", { state: { account } });
+  };
+
+  const handleTransaction = (formData) =>{
+
+    const receiver_acc_num = formData.receiver_account_number || otherAccounts[0]?.account_number;
+    const amount = parseFloat(formData.amount);
+    const category_id = formData.category_id || category[0]?.id;
+    const dataToSend = {
+      receiver_account_number: receiver_acc_num,
+      amount: amount,
+      description: formData.description,
+      category_id: category_id,
+    }
+
+    console.log(dataToSend);
+
+    axios
+    .post(`http://127.0.0.1:8000/api/user/accounts/${account.id}/transfer`, dataToSend,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      setTransaction((prevTransactions) => [
+        response.data.transaction,
+        ...prevTransactions,
+      ]);
+      setshowModalInternal(false);
+    })
+    .catch((error) => {
+      console.error("Error making the transaction:", error);
+    });
   };
 
   const pieData = {
@@ -134,6 +192,15 @@ const CardDetails = ({ account, token }) => {
             backgroundColor: "#36A2EB",
             color: "#fff",
           }}
+
+          onClick={() => {
+            setFormData({
+              receiver_account_number: "",
+              amount: "",
+              description: "",
+              category_id: ""
+            });
+            setshowModalExternal(true)}}
         >
           New Payment
         </button>
@@ -143,6 +210,15 @@ const CardDetails = ({ account, token }) => {
             backgroundColor: "#A0C878",
             color: "#fff",
           }}
+          
+          onClick={() => {
+            setFormData({
+              receiver_account_number: "",
+              amount: "",
+              description: "",
+              category_id: ""
+            });
+            setshowModalInternal(true)}}
         >
           Internal Transfer
         </button>
@@ -181,6 +257,99 @@ const CardDetails = ({ account, token }) => {
           </button>
         </div>
       </div>
+
+      <Modal
+        modalTitle = "New Payment"
+        acceptButton= "Finish"
+        show={showModalExternal}
+        onClose={() => setshowModalExternal(false)}
+        fields={[
+          {
+            name: "receiver_account_number",
+            label: "Receiver account number:",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "amount",
+            label: "Amount:",
+            type: "numeric",
+            required: true,
+          },
+          {
+            name: "description",
+            label: "Description",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "category_id",
+            label: "Category:",
+            type: "select",
+            options: [
+              { value: "", label: "Select transaction category" },
+              ...Array.isArray(category) ? category.map((c) => ({
+              value: c.id,
+              label: `${c.type}`,
+            })) : [],
+            ],
+            required: true,
+          },
+        ]}
+        onSubmit={handleTransaction}
+        formData={formData}
+        setFormData={setFormData}
+      />
+
+      <Modal
+        modalTitle = "Internal transfer"
+        acceptButton= "Finish"
+        show={showModalInternal}
+        onClose={() => setshowModalInternal(false)}
+        fields={[
+          {
+            name: "receiver_account_number",
+            label: "Receiver account number:",
+            type: "select",
+            options: [
+              { value: "", label: "Select receiver account" },
+              ...Array.isArray(otherAccounts) ? otherAccounts.map((acc) => ({
+              value: acc.account_number,
+              label: `${acc.account_number}`,
+            })) : [],
+            ],
+            required: true,
+          },
+          {
+            name: "amount",
+            label: "Amount:",
+            type: "numeric",
+            required: true,
+          },
+          {
+            name: "description",
+            label: "Description",
+            type: "text",
+            required: true,
+          },
+          {
+            name: "category_id",
+            label: "Category:",
+            type: "select",
+            options: [
+              { value: "", label: "Select transaction category" },
+              ...Array.isArray(category) ? category.map((c) => ({
+              value: c.id,
+              label: `${c.type}`,
+            })) : [],
+            ],
+            required: true,
+          },
+        ]}
+        onSubmit={handleTransaction}
+        formData={formData}
+        setFormData={setFormData}
+      />
     </div>
   );
 };
