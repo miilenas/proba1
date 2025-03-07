@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
+import Pagination from "react-bootstrap/Pagination";
 import "../CSS/ModalBackground.css";
 const AccountPage = () => {
   const [accounts, setAccounts] = useState([]);
@@ -15,6 +16,9 @@ const AccountPage = () => {
     currency_id: "",
     type: "",
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   const token = sessionStorage.getItem("access_token");
 
@@ -99,6 +103,19 @@ const AccountPage = () => {
       });
   };
 
+  const indexOfLastAccount = currentPage * itemsPerPage;
+  const indexOfFirstAccount = indexOfLastAccount - itemsPerPage;
+  const currentAccounts = accounts.slice(
+    indexOfFirstAccount,
+    indexOfLastAccount
+  );
+
+  const totalPages = Math.ceil(accounts.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="container mt-5">
       <h2>Accounts</h2>
@@ -126,8 +143,8 @@ const AccountPage = () => {
           </div>
         </div>
 
-        {accounts.length > 0 ? (
-          accounts.map((account) => (
+        {currentAccounts.length > 0 ? (
+          currentAccounts.map((account) => (
             <Card
               key={account.id}
               title={account.account_number}
@@ -144,7 +161,19 @@ const AccountPage = () => {
           <p>No accounts available.</p>
         )}
       </div>
-
+      <div className="d-flex justify-content-center my-4">
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pagination.Item
+              key={index}
+              active={index + 1 === currentPage}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
+      </div>
       <Modal
         show={showModalAdd}
         onClose={() => setShowModalAdd(false)}

@@ -3,6 +3,8 @@ import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 import "../CSS/ModalBackground.css";
+import Pagination from "react-bootstrap/Pagination";
+
 const CategoryPage = () => {
   const [formData, setFormData] = useState({
     type: "",
@@ -13,6 +15,8 @@ const CategoryPage = () => {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   //const [alertMessage, setAlertMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   const token = sessionStorage.getItem("access_token");
   useEffect(() => {
@@ -32,14 +36,14 @@ const CategoryPage = () => {
   }, [token]);
 
   const handleDelete = (category) => {
-    console.log(category);
     axios
       .delete(`http://127.0.0.1:8000/api/admin/category/${category}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
+        console.log(categories);
         setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat.type !== category)
+          prevCategories.filter((cat) => cat.id !== category)
         );
       })
       .catch((error) => {
@@ -94,6 +98,17 @@ const CategoryPage = () => {
       });
   };
 
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
+  const indexOfLastCategory = currentPage * itemsPerPage;
+  const indexOfFirstCategory = indexOfLastCategory - itemsPerPage;
+  const currentCategories = categories.slice(
+    indexOfFirstCategory,
+    indexOfLastCategory
+  );
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="container mt-5">
       <h2>Transaction Categories</h2>
@@ -116,8 +131,8 @@ const CategoryPage = () => {
           </div>
         </div>
 
-        {categories.length > 0 ? (
-          categories.map((category) => (
+        {currentCategories.length > 0 ? (
+          currentCategories.map((category) => (
             <Card
               key={category.id}
               title={category.type}
@@ -132,6 +147,20 @@ const CategoryPage = () => {
         ) : (
           <p>No transaction category available.</p>
         )}
+      </div>
+
+      <div className="d-flex justify-content-center my-4">
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pagination.Item
+              key={index}
+              active={index + 1 === currentPage}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
       </div>
 
       <Modal

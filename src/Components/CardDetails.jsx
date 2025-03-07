@@ -13,13 +13,12 @@ import { useNavigate } from "react-router-dom";
 import "../CSS/ModalBackground.css";
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
-const CardDetails = ({ account, accounts, token }) => {
+const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
   const otherAccounts =
     accounts && account ? accounts.filter((acc) => acc.id !== account.id) : [];
   const [income, setIncome] = useState(0);
   const [outgoing, setOutgoing] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [transaction, setTransaction] = useState([]);
   const [showModalInternal, setshowModalInternal] = useState(false);
   const [showModalExternal, setshowModalExternal] = useState(false);
   const [category, setCategory] = useState([]);
@@ -154,10 +153,12 @@ const CardDetails = ({ account, accounts, token }) => {
         }
       )
       .then((response) => {
-        setTransaction((prevTransactions) => [
+        setTransactions((prevTransactions) => [
           response.data.transaction,
           ...prevTransactions,
         ]);
+        console.log(response);
+        fetchAccounts();
         setshowModalInternal(false);
       })
       .catch((error) => {

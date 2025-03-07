@@ -3,6 +3,8 @@ import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 
+import Pagination from "react-bootstrap/Pagination";
+
 const ManageUserPage = () => {
   const [formData, setFormData] = useState({
     jmbg: "",
@@ -14,6 +16,8 @@ const ManageUserPage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   const token = sessionStorage.getItem("access_token");
 
@@ -86,6 +90,15 @@ const ManageUserPage = () => {
       });
   };
 
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUser = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="container mt-5">
       <h2>Available Users</h2>
@@ -112,8 +125,8 @@ const ManageUserPage = () => {
             </div>
           </div>
         </div>
-        {users.length > 0 ? (
-          users.map((user) => (
+        {currentUser.length > 0 ? (
+          currentUser.map((user) => (
             <Card
               key={user.id}
               title={`${user.first_name} ${user.last_name}`}
@@ -128,6 +141,20 @@ const ManageUserPage = () => {
         ) : (
           <p>No users available.</p>
         )}
+      </div>
+
+      <div className="d-flex justify-content-center my-4">
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pagination.Item
+              key={index}
+              active={index + 1 === currentPage}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
       </div>
 
       <Modal

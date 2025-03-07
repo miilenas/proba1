@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import Pagination from "react-bootstrap/Pagination";
 
 const TransactionPage = () => {
   const token = sessionStorage.getItem("access_token");
@@ -17,6 +18,10 @@ const TransactionPage = () => {
     dateTo: "",
     status: "",
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
   const location = useLocation();
   const { account } = location.state || {};
@@ -129,6 +134,15 @@ const TransactionPage = () => {
       });
   };
 
+  const indexOfLastTransaction = currentPage * itemsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - itemsPerPage;
+  const currentTransactions = filteredTransactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
     <div className="container mt-4">
       <h1>All Transactions</h1>
@@ -243,7 +257,7 @@ const TransactionPage = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredTransactions.map((transaction) => (
+          {currentTransactions.map((transaction) => (
             <tr key={transaction.id}>
               <td>{`${transaction.sender.first_name} ${transaction.sender.last_name}`}</td>
               <td>{transaction.receiver_account_number}</td>
@@ -269,6 +283,19 @@ const TransactionPage = () => {
           ))}
         </tbody>
       </table>
+      <div className="d-flex justify-content-center my-4">
+        <Pagination>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pagination.Item
+              key={index}
+              active={index + 1 === currentPage}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Pagination.Item>
+          ))}
+        </Pagination>
+      </div>
     </div>
   );
 };

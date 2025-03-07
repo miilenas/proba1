@@ -11,6 +11,10 @@ const UserDashboard = () => {
   const token = sessionStorage.getItem("access_token");
 
   useEffect(() => {
+    fetchAccounts();
+  }, [token]);
+
+  const fetchAccounts = () => {
     if (token) {
       axios
         .get("http://127.0.0.1:8000/api/user/accounts", {
@@ -41,7 +45,7 @@ const UserDashboard = () => {
           }
         });
     }
-  }, [token]);
+  };
 
   const handleCardClick = (account) => {
     setSelectedAccount(account);
@@ -87,6 +91,7 @@ const UserDashboard = () => {
           account={selectedAccount}
           accounts={accounts}
           token={token}
+          fetchAccounts={fetchAccounts}
         />
       )}
     </div>

@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import Form from "./Form";
 
-const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData, modalTitle, acceptButton}) => {
+const Modal = ({
+  show,
+  onClose,
+  fields,
+  onSubmit,
+  formData,
+  setFormData,
+  modalTitle,
+  acceptButton,
+}) => {
   if (!formData) return null;
   const handleSubmit = () => {
     console.log(formData);
@@ -21,9 +30,9 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData, modalTi
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-          <h5 className="modal-title">
-            {modalTitle ? modalTitle : "Enter data"}
-          </h5>
+            <h5 className="modal-title">
+              {modalTitle ? modalTitle : "Enter data"}
+            </h5>
             <button
               type="button"
               className="btn-close"
@@ -51,7 +60,7 @@ const Modal = ({ show, onClose, fields, onSubmit, formData, setFormData, modalTi
               className="btn btn-primary"
               onClick={handleSubmit}
             >
-              {acceptButton ? acceptButton : "Save Changes"}
+              {acceptButton ? acceptButton : "Save"}
             </button>
           </div>
         </div>
