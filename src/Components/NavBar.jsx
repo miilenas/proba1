@@ -1,9 +1,10 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import "../CSS/NavBar.css";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = ({ userType, onLogout }) => {
   const navigate = useNavigate();
-  console.log(userType);
+  const location = useLocation();
   const getLinksForUser = (userType) => {
     switch (userType) {
       case "admin":
@@ -61,11 +62,22 @@ const Navbar = ({ userType, onLogout }) => {
             {links.map((link, index) => (
               <li className="nav-item" key={index}>
                 {link.action ? (
-                  <button className="nav-link border-0" onClick={handleLogout}>
+                  <Link
+                    className={`nav-link ${
+                      location.pathname === link.path ? "active" : ""
+                    }`}
+                    to="/login"
+                    onClick={handleLogout}
+                  >
                     {link.name}
-                  </button>
+                  </Link>
                 ) : (
-                  <Link className="nav-link" to={link.path}>
+                  <Link
+                    className={`nav-link ${
+                      location.pathname === link.path ? "active" : ""
+                    }`}
+                    to={link.path}
+                  >
                     {link.name}
                   </Link>
                 )}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
-
+import "../CSS/ModalBackground.css";
 const CategoryPage = () => {
   const [formData, setFormData] = useState({
     type: "",
@@ -97,7 +97,8 @@ const CategoryPage = () => {
   return (
     <div className="container mt-5">
       <h2>Transaction Categories</h2>
-
+      {showModalAdd && <div className="modal-backdrop" />}
+      {showModalEdit && <div className="modal-backdrop" />}
       <div className="row">
         <div className="col-md-4 mb-4">
           <div

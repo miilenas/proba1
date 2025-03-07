@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MessageCard from "../Components/MessageCard";
 import Modal from "../Components/Modal";
+import "../CSS/ModalBackground.css";
 
 const UserMessagePage = () => {
   const [messages, setMessages] = useState([]);
@@ -9,17 +10,6 @@ const UserMessagePage = () => {
   const [newMessage, setNewMessage] = useState({ title: "", content: "" });
 
   const token = sessionStorage.getItem("access_token");
-  axios
-    .get("http://127.0.0.1:8000/api/user/messages", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      console.log("Fetched messages:", response.data);
-      setMessages(response.data.messages);
-    })
-    .catch((error) => {
-      console.error("Error fetching messages:", error);
-    });
 
   useEffect(() => {
     axios
@@ -62,6 +52,7 @@ const UserMessagePage = () => {
   return (
     <div className="container mt-5">
       <h2>My Messages</h2>
+      {showModal && <div className="modal-backdrop" />}
       <div className="row">
         <div className="col-md-4 mb-4">
           <div

@@ -79,13 +79,15 @@ const UserDashboard = () => {
           </div>
         ))}
         <div>
-          <h4>
-            Balance
-          </h4>
+          <h4>Balance</h4>
         </div>
       </div>
       {selectedAccount && (
-        <CardDetails account={selectedAccount} accounts={accounts} token={token} />
+        <CardDetails
+          account={selectedAccount}
+          accounts={accounts}
+          token={token}
+        />
       )}
     </div>
   );

@@ -89,7 +89,8 @@ const ManageUserPage = () => {
   return (
     <div className="container mt-5">
       <h2>Available Users</h2>
-
+      {showModalAdd && <div className="modal-backdrop" />}
+      {showModalEdit && <div className="modal-backdrop" />}
       <div className="row">
         <div className="col-md-4 mb-4">
           <div

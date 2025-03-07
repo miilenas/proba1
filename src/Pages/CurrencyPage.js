@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
+import "../CSS/ModalBackground.css";
 
 const CurrencyPage = () => {
   const [currencies, setCurrencies] = useState([]);
@@ -11,8 +12,8 @@ const CurrencyPage = () => {
       .get(`http://127.0.0.1:8000/api/currency`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then((response) => setCurrencies(response.data.currencies))
-        .catch((error) => console.error("Error fetching currencies:", error));
+      .then((response) => setCurrencies(response.data.currencies))
+      .catch((error) => console.error("Error fetching currencies:", error));
   }, []);
 
   return (

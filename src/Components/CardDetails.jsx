@@ -10,16 +10,18 @@ import {
 } from "chart.js";
 import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
+import "../CSS/ModalBackground.css";
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
 const CardDetails = ({ account, accounts, token }) => {
-  const otherAccounts = accounts && account ? accounts.filter(acc => acc.id !== account.id) : [];
+  const otherAccounts =
+    accounts && account ? accounts.filter((acc) => acc.id !== account.id) : [];
   const [income, setIncome] = useState(0);
   const [outgoing, setOutgoing] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [transaction, setTransaction] = useState([]);
   const [showModalInternal, setshowModalInternal] = useState(false);
-  const [showModalExternal, setshowModalExternal] = useState(false);  
+  const [showModalExternal, setshowModalExternal] = useState(false);
   const [category, setCategory] = useState([]);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -106,16 +108,16 @@ const CardDetails = ({ account, accounts, token }) => {
 
   useEffect(() => {
     if (token) {
-    axios
-      .get("http://127.0.0.1:8000/api/category", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response)=>{
-        setCategory(response.data["transaction categories"]);
-      })
-      .catch((error) => {
-        console.error("Error fetching category:", error);
-      });
+      axios
+        .get("http://127.0.0.1:8000/api/category", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setCategory(response.data["transaction categories"]);
+        })
+        .catch((error) => {
+          console.error("Error fetching category:", error);
+        });
     }
   }, [token]);
 
@@ -129,9 +131,9 @@ const CardDetails = ({ account, accounts, token }) => {
     navigate("/user/account/transactions", { state: { account } });
   };
 
-  const handleTransaction = (formData) =>{
-
-    const receiver_acc_num = formData.receiver_account_number || otherAccounts[0]?.account_number;
+  const handleTransaction = (formData) => {
+    const receiver_acc_num =
+      formData.receiver_account_number || otherAccounts[0]?.account_number;
     const amount = parseFloat(formData.amount);
     const category_id = formData.category_id || category[0]?.id;
     const dataToSend = {
@@ -139,25 +141,28 @@ const CardDetails = ({ account, accounts, token }) => {
       amount: amount,
       description: formData.description,
       category_id: category_id,
-    }
+    };
 
     console.log(dataToSend);
 
     axios
-    .post(`http://127.0.0.1:8000/api/user/accounts/${account.id}/transfer`, dataToSend,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    .then((response) => {
-      setTransaction((prevTransactions) => [
-        response.data.transaction,
-        ...prevTransactions,
-      ]);
-      setshowModalInternal(false);
-    })
-    .catch((error) => {
-      console.error("Error making the transaction:", error);
-    });
+      .post(
+        `http://127.0.0.1:8000/api/user/accounts/${account.id}/transfer`,
+        dataToSend,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        setTransaction((prevTransactions) => [
+          response.data.transaction,
+          ...prevTransactions,
+        ]);
+        setshowModalInternal(false);
+      })
+      .catch((error) => {
+        console.error("Error making the transaction:", error);
+      });
   };
 
   const pieData = {
@@ -185,6 +190,8 @@ const CardDetails = ({ account, accounts, token }) => {
 
   return (
     <div className="container mt-4">
+      {showModalInternal && <div className="modal-backdrop" />}
+      {showModalExternal && <div className="modal-backdrop" />}
       <div className="mb-3">
         <button
           className="btn m-2"
@@ -192,15 +199,15 @@ const CardDetails = ({ account, accounts, token }) => {
             backgroundColor: "#36A2EB",
             color: "#fff",
           }}
-
           onClick={() => {
             setFormData({
               receiver_account_number: "",
               amount: "",
               description: "",
-              category_id: ""
+              category_id: "",
             });
-            setshowModalExternal(true)}}
+            setshowModalExternal(true);
+          }}
         >
           New Payment
         </button>
@@ -210,15 +217,15 @@ const CardDetails = ({ account, accounts, token }) => {
             backgroundColor: "#A0C878",
             color: "#fff",
           }}
-          
           onClick={() => {
             setFormData({
               receiver_account_number: "",
               amount: "",
               description: "",
-              category_id: ""
+              category_id: "",
             });
-            setshowModalInternal(true)}}
+            setshowModalInternal(true);
+          }}
         >
           Internal Transfer
         </button>
@@ -248,7 +255,7 @@ const CardDetails = ({ account, accounts, token }) => {
             {transactions.slice(0, 5).map((transaction) => (
               <li key={transaction.id} className="list-group-item">
                 {transaction.description} : {transaction.amount}{" "}
-                {account.currency.name}
+                {transaction.sender_account.currency.name}
               </li>
             ))}
           </ul>
@@ -259,8 +266,8 @@ const CardDetails = ({ account, accounts, token }) => {
       </div>
 
       <Modal
-        modalTitle = "New Payment"
-        acceptButton= "Finish"
+        modalTitle="New Payment"
+        acceptButton="Finish"
         show={showModalExternal}
         onClose={() => setshowModalExternal(false)}
         fields={[
@@ -288,10 +295,12 @@ const CardDetails = ({ account, accounts, token }) => {
             type: "select",
             options: [
               { value: "", label: "Select transaction category" },
-              ...Array.isArray(category) ? category.map((c) => ({
-              value: c.id,
-              label: `${c.type}`,
-            })) : [],
+              ...(Array.isArray(category)
+                ? category.map((c) => ({
+                    value: c.id,
+                    label: `${c.type}`,
+                  }))
+                : []),
             ],
             required: true,
           },
@@ -302,8 +311,8 @@ const CardDetails = ({ account, accounts, token }) => {
       />
 
       <Modal
-        modalTitle = "Internal transfer"
-        acceptButton= "Finish"
+        modalTitle="Internal transfer"
+        acceptButton="Finish"
         show={showModalInternal}
         onClose={() => setshowModalInternal(false)}
         fields={[
@@ -313,10 +322,12 @@ const CardDetails = ({ account, accounts, token }) => {
             type: "select",
             options: [
               { value: "", label: "Select receiver account" },
-              ...Array.isArray(otherAccounts) ? otherAccounts.map((acc) => ({
-              value: acc.account_number,
-              label: `${acc.account_number}`,
-            })) : [],
+              ...(Array.isArray(otherAccounts)
+                ? otherAccounts.map((acc) => ({
+                    value: acc.account_number,
+                    label: `${acc.account_number}`,
+                  }))
+                : []),
             ],
             required: true,
           },
@@ -338,10 +349,12 @@ const CardDetails = ({ account, accounts, token }) => {
             type: "select",
             options: [
               { value: "", label: "Select transaction category" },
-              ...Array.isArray(category) ? category.map((c) => ({
-              value: c.id,
-              label: `${c.type}`,
-            })) : [],
+              ...(Array.isArray(category)
+                ? category.map((c) => ({
+                    value: c.id,
+                    label: `${c.type}`,
+                  }))
+                : []),
             ],
             required: true,
           },
