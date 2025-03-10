@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Form from "../Components/Form";
-import AlertMessage from "../Components/AlertMessage";
+import ErrorModal from "../Components/AlertModal";
 
 const RegisterEmployeePage = () => {
   const [formData, setFormData] = useState({
@@ -67,8 +67,8 @@ const RegisterEmployeePage = () => {
     <div className="container mt-5">
       <h2 className="text-center">Register Employee</h2>
 
-      {errorMessage && <AlertMessage message={errorMessage} />}
-      {successMessage && <AlertMessage message={successMessage} />}
+      {errorMessage && <ErrorModal message={errorMessage} />}
+      {successMessage && <ErrorModal message={successMessage} />}
 
       {showForm && (
         <form onSubmit={handleRegister}>

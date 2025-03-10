@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AlertMessage from "../Components/AlertMessage";
+import ErrorModal from "../Components/AlertModal";
 import Form from "../Components/Form";
 
 const Login = ({ onLoginSuccess }) => {
@@ -77,7 +77,7 @@ const Login = ({ onLoginSuccess }) => {
         <button type="submit" className="btn btn-primary mt-3">
           Login
         </button>
-        <AlertMessage message={loginError} />
+        <ErrorModal message={loginError} />
       </form>
     </div>
   );

@@ -10,7 +10,7 @@ const Navbar = ({ userType, onLogout }) => {
       case "admin":
         return [
           { name: "Manage Users", path: "/admin/users" },
-          { name: "Manage Accounts", path: "admin/accounts" },
+          { name: "Manage Accounts", path: "/admin/accounts" },
           { name: "Manage Categories", path: "/admin/category" },
           { name: "Manage Employees", path: "/register" },
           { name: "Logout", path: "/logout", action: true },

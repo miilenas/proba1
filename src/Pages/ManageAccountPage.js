@@ -3,6 +3,7 @@ import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 import Pagination from "react-bootstrap/Pagination";
+import AlertModal from "../Components/AlertModal";
 import "../CSS/ModalBackground.css";
 const AccountPage = () => {
   const [accounts, setAccounts] = useState([]);
@@ -17,6 +18,9 @@ const AccountPage = () => {
     type: "",
   });
 
+  const [messages, setMessages] = useState(null);
+  const [title, setTitle] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
 
@@ -72,6 +76,9 @@ const AccountPage = () => {
         setAccounts((prevAccounts) =>
           prevAccounts.filter((acc) => acc.id !== accountId)
         );
+        setMessages("Successfully deleted account.");
+        setTitle("Success");
+        setShowErrorModal(true);
       })
       .catch((error) => {
         console.error("Error deleting account:", error);
@@ -79,8 +86,8 @@ const AccountPage = () => {
   };
 
   const handleAdd = (formData) => {
-    const currency_id = formData.currency_id || currencies[0]?.id;
-    const owner_id = formData.owner_id || owners[0]?.id;
+    const currency_id = formData.currency_id;
+    const owner_id = formData.owner_id;
     const balance = parseFloat(formData.balance);
     const dataToSend = {
       account_number: formData.account_number,
@@ -99,6 +106,14 @@ const AccountPage = () => {
         setShowModalAdd(false);
       })
       .catch((error) => {
+        if (error.response && error.response.data.errors) {
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
         console.error("Error adding account:", error);
       });
   };
@@ -190,10 +205,16 @@ const AccountPage = () => {
             name: "currency_id",
             label: "Currency",
             type: "select",
-            options: currencies.map((c) => ({
-              value: c.id,
-              label: `${c.name}`,
-            })),
+            options: [
+              { value: "", label: "Select  currency" },
+              ...(Array.isArray(currencies)
+                ? currencies.map((c) => ({
+                    value: c.id,
+                    label: `${c.name}`,
+                  }))
+                : []),
+            ],
+            required: true,
             onChange: (e) => {
               setFormData((prev) => ({
                 ...prev,
@@ -207,10 +228,16 @@ const AccountPage = () => {
             name: "owner_id",
             label: "Owner",
             type: "select",
-            options: owners.map((o) => ({
-              value: o.id,
-              label: `${o.first_name} ${o.last_name}`,
-            })),
+            options: [
+              { value: "", label: "Select  owner" },
+              ...(Array.isArray(owners)
+                ? owners.map((o) => ({
+                    value: o.id,
+                    label: `${o.first_name} ${o.last_name}`,
+                  }))
+                : []),
+            ],
+            required: true,
             onChange: (e) => {
               setFormData((prev) => ({
                 ...prev,
@@ -223,6 +250,14 @@ const AccountPage = () => {
         formData={formData}
         setFormData={setFormData}
       />
+      {showErrorModal && messages && (
+        <AlertModal
+          title={title}
+          message={messages}
+          onClose={() => setShowErrorModal(false)}
+          type={title}
+        />
+      )}
     </div>
   );
 };

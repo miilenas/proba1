@@ -4,6 +4,7 @@ import Card from "../Components/Card";
 import Modal from "../Components/Modal";
 import "../CSS/ModalBackground.css";
 import Pagination from "react-bootstrap/Pagination";
+import AlertModal from "../Components/AlertModal";
 
 const CategoryPage = () => {
   const [formData, setFormData] = useState({
@@ -14,9 +15,12 @@ const CategoryPage = () => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  //const [alertMessage, setAlertMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
+
+  const [messages, setMessages] = useState(null);
+  const [title, setTitle] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const token = sessionStorage.getItem("access_token");
   useEffect(() => {
@@ -45,6 +49,9 @@ const CategoryPage = () => {
         setCategories((prevCategories) =>
           prevCategories.filter((cat) => cat.id !== category)
         );
+        setMessages("Successfully deleted transaction category.");
+        setTitle("Success");
+        setShowErrorModal(true);
       })
       .catch((error) => {
         console.error("Error deleting category:", error);
@@ -77,6 +84,14 @@ const CategoryPage = () => {
         setSelectedCategory(null);
       })
       .catch((error) => {
+        if (error.response && error.response.data.errors) {
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
         console.error("Error editing category:", error);
       });
   };
@@ -94,6 +109,14 @@ const CategoryPage = () => {
         setShowModalAdd(false);
       })
       .catch((error) => {
+        if (error.response && error.response.data.errors) {
+          const errorArray = Object.values(error.response.data.type);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
         console.error("Error adding category:", error);
       });
   };
@@ -206,6 +229,14 @@ const CategoryPage = () => {
         formData={selectedCategory}
         setFormData={setSelectedCategory}
       />
+      {showErrorModal && messages && (
+        <AlertModal
+          title={title}
+          message={messages}
+          onClose={() => setShowErrorModal(false)}
+          type={title}
+        />
+      )}
     </div>
   );
 };
