@@ -30,6 +30,7 @@ const CurrencyPage = () => {
                 Date: currency.date,
                 "Exchange rate": currency.exchange_rate,
               }}
+              size="s"
             />
           ))
         ) : (

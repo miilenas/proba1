@@ -73,6 +73,7 @@ const SupportDashboard = () => {
  
   return (
     <div className="container mt-5">
+      <h1 className="mb-4">Messages</h1>
       <button className="btn btn-primary mb-4" onClick={handleShowUnsolved}>
         {showUnsolved ? "Show All Messages" : "Show Unsolved Messages"}
       </button>
@@ -84,6 +85,7 @@ const SupportDashboard = () => {
               key={message.id}
               message={message}
               onSolve={handleSolve}
+              size="l"
             />
           ))
         ) : (

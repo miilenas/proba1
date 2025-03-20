@@ -3,13 +3,18 @@ import axios from "axios";
 import MessageCard from "../Components/MessageCard";
 import Modal from "../Components/Modal";
 import "../CSS/ModalBackground.css";
+import AlertModal from "../Components/AlertModal";
 
 const UserMessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newMessage, setNewMessage] = useState({ title: "", content: "" });
+  
 
   const token = sessionStorage.getItem("access_token");
+const [message, setMessage] = useState(null);
+  const [title, setTitle] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   useEffect(() => {
     axios
@@ -27,22 +32,32 @@ const UserMessagePage = () => {
 
   const handleAddMessage = (formData) => {
     const updatedMessage = { ...formData, id: Date.now() };
-    setMessages((prevMessages) => [updatedMessage, ...prevMessages]);
 
     axios
       .post("http://127.0.0.1:8000/api/user/messages", formData, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
+        setMessages((prevMessages) => [updatedMessage, ...prevMessages]);
+        console.log(response);
         setMessages((prevMessages) =>
           prevMessages.map((message) =>
-            message.id === updatedMessage.id ? response.data : message
+            message.id === updatedMessage.id ? response.data.data : message
           )
         );
         setShowModal(false);
       })
       .catch((error) => {
-        console.error("Error adding message:", error);
+        if (error.response && error.response.data.errors) {
+          console.log(error);
+          const errorArray = Object.values(error.response.data.errors);
+          setMessage(errorArray);
+          setTitle("Error");
+        } else {
+          setMessage(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
+        console.error("Error adding category:", error);
         setMessages((prevMessages) =>
           prevMessages.filter((message) => message.id !== updatedMessage.id)
         );
@@ -51,7 +66,7 @@ const UserMessagePage = () => {
 
   return (
     <div className="container mt-5">
-      <h2>My Messages</h2>
+      <h2 className="mb-5">My Messages</h2>
       {showModal && <div className="modal-backdrop" />}
       <div className="row">
         <div className="col-md-4 mb-4">
@@ -72,8 +87,6 @@ const UserMessagePage = () => {
             <MessageCard
               key={message.id}
               message={message}
-              onSolve={() => {}}
-              hideSolveButton={true}
             />
           ))
         ) : (
@@ -97,6 +110,14 @@ const UserMessagePage = () => {
         formData={newMessage}
         setFormData={setNewMessage}
       />
+      {showErrorModal && message && (
+              <AlertModal
+                title={title}
+                message={message}
+                onClose={() => setShowErrorModal(false)}
+                type={title}
+              />
+            )}
     </div>
   );
 };

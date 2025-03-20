@@ -110,7 +110,8 @@ const CategoryPage = () => {
       })
       .catch((error) => {
         if (error.response && error.response.data.errors) {
-          const errorArray = Object.values(error.response.data.type);
+          console.log(error);
+          const errorArray = Object.values(error.response.data.errors);
           setMessages(errorArray);
           setTitle("Error");
         } else {
@@ -140,7 +141,7 @@ const CategoryPage = () => {
       <div className="row">
         <div className="col-md-4 mb-4">
           <div
-            className="card add-category-card"
+            className="card add-category-card card-s"
             onClick={() => {
               setFormData({ type: "", description: "" });
               setShowModalAdd(true);
@@ -165,6 +166,7 @@ const CategoryPage = () => {
               }}
               onDelete={handleDelete}
               onEdit={() => handleOpenEditModal(category)}
+              size="s"
             />
           ))
         ) : (

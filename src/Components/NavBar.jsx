@@ -1,5 +1,6 @@
 import React from "react";
 import "../CSS/NavBar.css";
+import logo from '../Images/logo.png';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = ({ userType, onLogout }) => {
@@ -43,9 +44,14 @@ const Navbar = ({ userType, onLogout }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-          e-Banking
-        </a>
+      <a className="navbar-brand" href="/">
+  <img
+    src={logo}
+    alt="logo"
+    style={{ height: "40px" }} 
+  />
+</a>
+
         <button
           className="navbar-toggler"
           type="button"

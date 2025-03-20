@@ -8,6 +8,15 @@
   backdrop-filter: blur(5px) !important;
   z-index: 1040 !important;
 }
-.card {
-  min-height: 213px;
+.card{
+  min-height: 222px;
+}
+.card-s {
+  min-height: 180px;
+}
+.card-m {
+  min-height: 220px;
+}
+.card-l {
+  min-height: 255px;
 }

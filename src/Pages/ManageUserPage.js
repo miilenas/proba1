@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "../Components/Card";
 import Modal from "../Components/Modal";
+import AlertModal from "../Components/AlertModal";
 
 import Pagination from "react-bootstrap/Pagination";
 
@@ -18,6 +19,9 @@ const ManageUserPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
+   const [messages, setMessages] = useState(null);
+    const [title, setTitle] = useState("");
+    const [showErrorModal, setShowErrorModal] = useState(false);
 
   const token = sessionStorage.getItem("access_token");
 
@@ -61,7 +65,16 @@ const ManageUserPage = () => {
         setSelectedUser(null);
       })
       .catch((error) => {
-        console.error("Error updating user:", error);
+        if (error.response && error.response.data.errors) {
+          console.log(error);
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
+        console.error("Error adding category:", error);
       });
   };
 
@@ -85,8 +98,16 @@ const ManageUserPage = () => {
         });
       })
       .catch((error) => {
-        console.error("Error adding user:", error);
-        console.log("Greska pri dodavanju");
+        if (error.response && error.response.data.errors) {
+          console.log(error);
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
+        console.error("Error adding category:", error);
       });
   };
 
@@ -209,6 +230,14 @@ const ManageUserPage = () => {
         formData={formData}
         setFormData={setFormData}
       />
+      {showErrorModal && messages && (
+        <AlertModal
+          title={title}
+          message={messages}
+          onClose={() => setShowErrorModal(false)}
+          type={title}
+        />
+      )}
     </div>
   );
 };

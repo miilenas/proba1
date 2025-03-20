@@ -11,6 +11,7 @@ import {
 import Modal from "../Components/Modal";
 import { useNavigate } from "react-router-dom";
 import "../CSS/ModalBackground.css";
+import AlertModal from "./AlertModal";
 ChartJS.register(CategoryScale, ArcElement, Tooltip, Legend);
 
 const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
@@ -29,6 +30,9 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
     description: "",
     category_id: "",
   });
+  const [messages, setMessages] = useState(null);
+  const [title, setTitle] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   useEffect(() => {
     if (!account || !token) return;
@@ -162,7 +166,16 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
         setshowModalInternal(false);
       })
       .catch((error) => {
-        console.error("Error making the transaction:", error);
+        if (error.response && error.response.data.errors) {
+          console.log(error);
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
+        console.error("Error adding category:", error);
       });
   };
 
@@ -364,6 +377,14 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
         formData={formData}
         setFormData={setFormData}
       />
+      {showErrorModal && messages && (
+        <AlertModal
+          title={title}
+          message={messages}
+          onClose={() => setShowErrorModal(false)}
+          type={title}
+        />
+      )}
     </div>
   );
 };

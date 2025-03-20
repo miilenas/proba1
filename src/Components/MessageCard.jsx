@@ -1,10 +1,11 @@
 import React from "react";
+import ModalBackground from "../CSS/ModalBackground.css";
  
-const MessageCard = ({ message, onSolve, hideSolveButton }) => {
+const MessageCard = ({ message, onSolve, size = "m" }) => {
   return (
     <div className="col-md-4 mb-4">
-      <div className="card">
-        <div className="card-body">
+      <div className={`card card-${size}`}>
+        <div className="card-body  d-flex flex-column">
           <h5 className="card-title">{message.title}</h5>
           <p className="card-text">{message.content}</p>
           <p className="card-text">
@@ -15,8 +16,8 @@ const MessageCard = ({ message, onSolve, hideSolveButton }) => {
             {message.reviewed_by || "Not Reviewed"}
           </p>
  
-          {!hideSolveButton && message.status === "pending" && (
-            <button className="btn btn-success" onClick={() => onSolve(message.id)}>
+          {onSolve && message.status === "pending" && (
+            <button className="btn btn-success mt-auto" onClick={() => onSolve(message.id)}>
               Mark as Solved
             </button>
           )}

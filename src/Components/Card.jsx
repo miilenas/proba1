@@ -1,9 +1,9 @@
 import React from "react";
 
-const Card = ({ title, data, dataText, onDelete, onEdit }) => {
+const Card = ({ title, data, dataText, onDelete, onEdit, size="m" }) => {
   return (
     <div className="col-md-4 mb-4">
-      <div className="card">
+      <div className={`card card-${size}`}>
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           {dataText !== null ? (

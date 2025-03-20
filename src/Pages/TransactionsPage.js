@@ -45,6 +45,7 @@ const TransactionPage = () => {
         }
       )
       .then((response) => {
+        console.log("trans", response);
         setTransactions([...response.data.transactions].reverse());
         setFilteredTransactions([...response.data.transactions].reverse());
       })
@@ -263,7 +264,7 @@ const TransactionPage = () => {
               <td>{transaction.receiver_account_number}</td>
               <td>{transaction.category.type}</td>
               <td>{transaction.date}</td>
-              <td>{transaction.amount}</td>
+              <td>{transaction.amount}{" "}{transaction.sender_account.currency.name}</td>
               <td>{transaction.description}</td>
               <td>{transaction.status}</td>
               <td>{transaction.scope}</td>
