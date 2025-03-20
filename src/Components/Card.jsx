@@ -1,6 +1,6 @@
 import React from "react";
 
-const Card = ({ title, data, dataText, onDelete, onEdit, size="m" }) => {
+const Card = ({ title, data, dataText, onDelete, onEdit, buttonText, size="m" }) => {
   return (
     <div className="col-md-4 mb-4">
       <div className={`card card-${size}`}>
@@ -26,7 +26,7 @@ const Card = ({ title, data, dataText, onDelete, onEdit, size="m" }) => {
           )}
           {onEdit && (
             <button className="btn btn-warning" onClick={() => onEdit(data)}>
-              Update
+               {buttonText == null ? "Update" : buttonText}
             </button>
           )}
         </div>

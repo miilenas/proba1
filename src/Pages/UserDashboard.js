@@ -56,7 +56,7 @@ const UserDashboard = () => {
   }
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>No accounts available!</div>;
   }
 
   return (

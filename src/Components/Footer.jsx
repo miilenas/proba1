@@ -2,8 +2,9 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet"; 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationPin } from '@fortawesome/free-solid-svg-icons';
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import { faLocationPin } from '@fortawesome/free-solid-svg-icons';
+
 
 const Footer = () => {
   const svgMarker = `
@@ -19,7 +20,7 @@ const bankIcon = L.divIcon({
     popupAnchor: [0, -32],
   });
   return (
-    <footer className="py-4 my-4 bg-light">
+    <footer className="py-3 my-3 bg-light">
       <div className="container">
         <div className="row">
         <div className="col-md-6 mb-3">
@@ -31,8 +32,8 @@ const bankIcon = L.divIcon({
           </div>
 
           <div className="col-md-6">
-            <div style={{ height: "300px" }}>
-              <MapContainer center={[44.7727, 20.4752]} zoom={13} style={{ height: "100%", width: "100%" }}>
+           
+          <MapContainer center={[44.7727, 20.4752]} zoom={13} style={{ height: "200px", width: "100%" }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -42,7 +43,7 @@ const bankIcon = L.divIcon({
                   </Popup>
                 </Marker>
               </MapContainer>
-            </div>
+          
           </div>
         </div>
 
