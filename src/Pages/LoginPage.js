@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../Components/AlertModal";
 import Form from "../Components/Form";
+import logo from '../Images/logo.png';
+import "../CSS/LoginPage.css";
 
 const Login = ({ onLoginSuccess }) => {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -69,9 +71,21 @@ const Login = ({ onLoginSuccess }) => {
   }
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center">Login</h2>
+    <div className="login-page" >
+    <img
+      src={logo}
+      alt="logo"
+      style={{
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        height: '50px',
+      }}
+    />
+    
+      <div className="center-form-container">
       <form onSubmit={handleLogin}>
+      <h2 className="text-center fw-bold ">Login</h2>
         <Form
           fields={[
             {
@@ -79,12 +93,14 @@ const Login = ({ onLoginSuccess }) => {
               label: "Email",
               type: "email",
               required: true,
+              className:"small-input",
             },
             {
               name: "password",
               label: "Password",
               type: "password",
               required: true,
+              className:"small-input",
             },
           ]}
           formData={userData}
@@ -104,6 +120,8 @@ const Login = ({ onLoginSuccess }) => {
         />
       )}
     </div>
+    </div>
+  
   );
 };
 

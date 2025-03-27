@@ -82,9 +82,6 @@ const UserDashboard = () => {
             />
           </div>
         ))}
-        <div>
-          <h4>Balance</h4>
-        </div>
       </div>
       {selectedAccount && (
         <CardDetails

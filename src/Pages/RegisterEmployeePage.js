@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Form from "../Components/Form";
-import ErrorModal from "../Components/AlertModal";
+import AlertModal from "../Components/AlertModal";
 
 const RegisterEmployeePage = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +9,9 @@ const RegisterEmployeePage = () => {
     password: "",
     role: "support",
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState("");
+  const [messages, setMessages] = useState(null);
+  const[title, setTitle]=useState("");
   const [showForm, setShowForm] = useState(true);
   const token = window.sessionStorage.getItem("access_token");
 
@@ -22,10 +23,12 @@ const RegisterEmployeePage = () => {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password || !formData.role) {
-      setErrorMessage("Fill in all fields!");
+   /* if (!formData.email || !formData.password || !formData.role) {
+      setMessages("Fill in all fields!");
+      setTitle("Error");
+      setShowErrorModal(true);
       return;
-    }
+    } */
 
     console.log("Sending data:", formData);
 
@@ -50,28 +53,28 @@ const RegisterEmployeePage = () => {
           );
         }
 
-        setSuccessMessage("User successfully registered!");
-        setErrorMessage("");
-        setShowForm(false);
+        setMessages("Successfully registered employee.");
+        setTitle("Success");
+        setShowErrorModal(true);
       })
       .catch((error) => {
-        console.error("Error registering user:", error);
-        setErrorMessage(
-          error.response?.data?.message ||
-            "Registration failed. Please try again."
-        );
+        if (error.response && error.response.data.errors) {
+          const errorArray = Object.values(error.response.data.errors);
+          setMessages(errorArray);
+          setTitle("Error");
+        } else {
+          setMessages(["Unexpected error."]);
+        }
+        setShowErrorModal(true);
+        console.error(error);
       });
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center">Register Employee</h2>
-
-      {errorMessage && <ErrorModal message={errorMessage} />}
-      {successMessage && <ErrorModal message={successMessage} />}
-
+      <div className="center-form-container">
       {showForm && (
         <form onSubmit={handleRegister}>
+          <h2 className="text-center">Register Employee</h2>
           <Form
             fields={[
               { name: "email", label: "Email", type: "email", required: true },
@@ -95,10 +98,18 @@ const RegisterEmployeePage = () => {
             handleInputChange={handleInputChange}
           />
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary mt-3">
             Register
           </button>
         </form>
+      )}
+       {showErrorModal && messages && (
+        <AlertModal
+          title={title}
+          message={messages}
+          onClose={() => setShowErrorModal(false)}
+          type={title}
+        />
       )}
     </div>
   );

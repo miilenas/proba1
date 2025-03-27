@@ -1,6 +1,6 @@
 import React from "react";
 
-const Form = ({ fields, formData, setFormData, handleInputChange }) => {
+const Form = ({ fields, formData, handleInputChange }) => {
   return (
     <>
       {fields.map((field) =>
@@ -11,7 +11,8 @@ const Form = ({ fields, formData, setFormData, handleInputChange }) => {
               name={field.name}
               value={formData[field.name] || ""}
               onChange={handleInputChange}
-              className="form-control"
+              //className="form-control"
+              className={`form-control ${field.className || "small-input"}`}
             >
               {field.options.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -45,7 +46,8 @@ const Form = ({ fields, formData, setFormData, handleInputChange }) => {
               name={field.name}
               value={formData[field.name] || ""}
               onChange={handleInputChange}
-              className="form-control"
+              //className="form-control"
+              className={`form-control ${field.className || "small-input"}`}
               required={field.required}
               readOnly={field.readOnly || false}
             />

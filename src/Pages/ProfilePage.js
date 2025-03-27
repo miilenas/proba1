@@ -25,9 +25,10 @@ const ProfilePage = () => {
   }
  
   return (
-    <div className="container mt-5">
+    <div className="container mt-3">
+      
       <h2>Profile Details</h2>
-      <ul className="list-group">
+      <ul className="list-group" style={{ maxWidth: "500px" }} >
         <li className="list-group-item">
           <strong>First Name:</strong> {userData.first_name}
         </li>
