@@ -1,5 +1,5 @@
 import React from "react";
-import ModalBackground from "../CSS/ModalBackground.css";
+import "../CSS/ModalBackground.css";
  
 const MessageCard = ({ message, onSolve, size = "m" }) => {
   return (
@@ -17,7 +17,7 @@ const MessageCard = ({ message, onSolve, size = "m" }) => {
           </p>
  
           {onSolve && message.status === "pending" && (
-            <button className="btn btn-success mt-auto" onClick={() => onSolve(message.id)}>
+            <button className="btn btn-success mt-auto button-gray zoom" onClick={() => onSolve(message.id)}>
               Mark as Solved
             </button>
           )}

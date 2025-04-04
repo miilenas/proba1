@@ -11,7 +11,7 @@ const UserCard = ({
 }) => {
   return (
     <div
-      className={`user-card ${isSelected ? "selected" : ""}`}
+      className={`user-card ${isSelected ? "selected" : "zoom-no-centered"} `}
       style={{ width: "18rem" }}
     >
       <div className="user-card-body ">

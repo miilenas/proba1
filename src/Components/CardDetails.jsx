@@ -75,6 +75,7 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
               }
             )
             .then((outgoingResponse) => {
+              console.log(outgoingResponse);
               const outgoingTransactions = outgoingResponse.data.transactions;
               const totalOutgoing = outgoingTransactions.reduce(
                 (sum, transaction) => sum + parseFloat(transaction.amount),

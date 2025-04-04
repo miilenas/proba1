@@ -1,4 +1,5 @@
 import React from "react";
+import  "../CSS/Card.css"
 
 const Card = ({ title, data, dataText, onDelete, onEdit, buttonText, size="m" }) => {
   return (
@@ -18,14 +19,14 @@ const Card = ({ title, data, dataText, onDelete, onEdit, buttonText, size="m" })
 
           {onDelete && (
             <button
-              className="btn btn-primary me-2"
+              className="btn button-gray zoom"
               onClick={() => onDelete(data.id)}
             >
               Delete
             </button>
           )}
           {onEdit && (
-            <button className="btn btn-warning" onClick={() => onEdit(data)}>
+            <button className="btn button-blue zoom" onClick={() => onEdit(data)}>
                {buttonText == null ? "Update" : buttonText}
             </button>
           )}

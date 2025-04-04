@@ -83,14 +83,14 @@ const UserDashboard = () => {
           </div>
         ))}
       </div>
-      {selectedAccount && (
+{/*{selectedAccount && (
         <CardDetails
           account={selectedAccount}
           accounts={accounts}
           token={token}
           fetchAccounts={fetchAccounts}
         />
-      )}
+      )}*/}
     </div>
   );
 };

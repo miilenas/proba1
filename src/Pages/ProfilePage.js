@@ -42,7 +42,7 @@ const ProfilePage = () => {
           <strong>JMBG:</strong> {userData.jmbg}
         </li>
       </ul>
-      <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
+      <button className="btn btn-primary mt-3 button-blue zoom" onClick={() => navigate("/")}>
         Back to Dashboard
       </button>
     </div>

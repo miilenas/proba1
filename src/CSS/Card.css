@@ -1,0 +1,46 @@
+.zoom {
+    transition: transform 0.3s ease-in-out !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+  }
+  
+  .zoom:hover {
+    transform: scale(1.1) !important;
+  }
+
+  .zoom-no-centered {
+    transition: transform 0.3s ease-in-out !important;
+    display: flex;
+  }
+
+  .zoom-no-centered:hover {
+    transform: scale(1.1) !important;
+  }
+
+  .button-blue{
+    background-color: #0056b3 !important;
+    color: white !important;
+    outline: none !important;
+    text-align: center !important;
+  }
+
+  .button-gray{
+      background-color: #abaeb2 !important;
+      color: white !important;
+      outline: none !important;
+      text-align: center !important;
+      margin-right: 10px;
+  }
+
+  .button-white{
+    background-color: white !important;
+    color: #0056b3 !important;
+    outline: none !important;
+    text-align: center !important;
+    margin-right: 10px;
+}
+

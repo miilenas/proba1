@@ -72,9 +72,9 @@ const SupportDashboard = () => {
   const renderMessages = showUnsolved ? unsolvedMessages : messages;
  
   return (
-    <div className="container mt-5">
+    <div className="container mt-5"  style={{ marginLeft: "100px" }}>
       <h1 className="mb-4">Messages</h1>
-      <button className="btn btn-primary mb-4" onClick={handleShowUnsolved}>
+      <button className={`btn btn-primary mb-4 zoom ${showUnsolved ? "button-white" : "button-blue"} `} onClick={handleShowUnsolved}>
         {showUnsolved ? "Show All Messages" : "Show Unsolved Messages"}
       </button>
  

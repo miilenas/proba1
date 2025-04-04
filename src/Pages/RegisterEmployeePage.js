@@ -74,7 +74,7 @@ const RegisterEmployeePage = () => {
       <div className="center-form-container">
       {showForm && (
         <form onSubmit={handleRegister}>
-          <h2 className="text-center">Register Employee</h2>
+          <h2 className="text-center" style={{color: "#0056b3"}}>Register Employee</h2>
           <Form
             fields={[
               { name: "email", label: "Email", type: "email", required: true },
@@ -98,7 +98,7 @@ const RegisterEmployeePage = () => {
             handleInputChange={handleInputChange}
           />
 
-          <button type="submit" className="btn btn-primary mt-3">
+          <button type="submit" className="btn btn-primary mt-3 button-blue d-block mx-auto" style={{position: "centered"}}>
             Register
           </button>
         </form>

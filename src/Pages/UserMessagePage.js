@@ -75,8 +75,8 @@ const [message, setMessage] = useState(null);
             onClick={() => setShowModal(true)}
             style={{ cursor: "pointer", textAlign: "center", padding: "20px" }}
           >
-            <div className="card-body">
-              <h2 style={{ fontSize: "50px", color: "#28a745" }}>+</h2>
+            <div className="card-body zoom">
+              <h2 style={{ fontSize: "50px", textAlign: "center", color: "#0056b3" }}>+</h2>
               <p>Add new message</p>
             </div>
           </div>

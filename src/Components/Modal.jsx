@@ -29,7 +29,7 @@ const Modal = ({
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
       <div className="modal-dialog">
         <div className="modal-content">
-          <div className="modal-header">
+          <div className="modal-header" style={{backgroundColor: "#0056b3", color: "white"}}>
             <h5 className="modal-title">
               {modalTitle ? modalTitle : "Enter data"}
             </h5>
@@ -57,7 +57,7 @@ const Modal = ({
             </button>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary button-blue"
               onClick={handleSubmit}
             >
               {acceptButton ? acceptButton : "Save"}
