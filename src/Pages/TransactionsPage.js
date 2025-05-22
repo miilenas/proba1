@@ -135,6 +135,21 @@ const TransactionPage = () => {
       });
   };
 
+    const resetFilters = () => {
+    setFilters({
+      scope: "",
+      category: "",
+      receiverAccountNumber: "",
+      minAmount: "",
+      maxAmount: "",
+      dateFrom: "",
+      dateTo: "",
+      status: "",
+    });
+    setFilteredTransactions(transactions);
+    setCurrentPage(1);
+  };
+
   const indexOfLastTransaction = currentPage * itemsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - itemsPerPage;
   const currentTransactions = filteredTransactions.slice(
@@ -154,6 +169,7 @@ const TransactionPage = () => {
               name="scope"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.scope}
             >
               <option value="">All</option>
               <option value="incoming">Incoming</option>
@@ -165,6 +181,7 @@ const TransactionPage = () => {
               name="category"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.category}
             >
               <option value="">All Categories</option>
               {categories.map((cat) => (
@@ -181,6 +198,7 @@ const TransactionPage = () => {
               placeholder="Receiver Account"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.receiver_account_number}
             />
           </div>
           <div className="col">
@@ -190,6 +208,7 @@ const TransactionPage = () => {
               placeholder="Min Amount"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.minAmount}
             />
           </div>
           <div className="col">
@@ -199,6 +218,7 @@ const TransactionPage = () => {
               placeholder="Max Amount"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.maxAmount}
             />
           </div>
           <div className="col">
@@ -207,6 +227,7 @@ const TransactionPage = () => {
               name="dateFrom"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.dateFrom}
             />
           </div>
           <div className="col">
@@ -215,6 +236,7 @@ const TransactionPage = () => {
               name="dateTo"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.dateTo}
             />
           </div>
           <div className="col">
@@ -222,6 +244,7 @@ const TransactionPage = () => {
               name="status"
               className="form-control"
               onChange={handleFilterChange}
+              value={filters.status}
             >
               <option value="">All Statuses</option>
               <option value="successful">Successful</option>
@@ -231,6 +254,11 @@ const TransactionPage = () => {
           <div className="col">
             <button className="btn btn-primary" onClick={applyFilters}>
               Filter
+            </button>
+          </div>
+          <div className="col">
+            <button className="btn btn-secondary" onClick={resetFilters}>
+             Reset 
             </button>
           </div>
         </div>
