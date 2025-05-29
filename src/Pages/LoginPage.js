@@ -3,22 +3,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../Components/AlertModal";
 import Form from "../Components/Form";
-import logo from '../Images/logo.png';
+import logo from "../Images/logo.png";
+import { usePlainTextForm } from "../Hooks/usePlainTextForm.ts";
 import "../CSS/LoginPage.css";
 
 const Login = ({ onLoginSuccess }) => {
-  const [userData, setUserData] = useState({ email: "", password: "" });
- // const [loginError, setLoginError] = useState("");
+  const {
+    form: userData,
+    handleChange,
+    getPlainForm,
+  } = usePlainTextForm({
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
 
-  const [ErrorModal, setErrorModal]=useState(false);
-  const[Messages, setMessages]=useState(false);
-  const[Title, setTitle]=useState(false);
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
+  const [ErrorModal, setErrorModal] = useState(false);
+  const [Messages, setMessages] = useState(false);
+  const [Title, setTitle] = useState(false);
 
   useEffect(() => {
     const storedUserType = window.sessionStorage.getItem("user_type");
@@ -29,10 +31,8 @@ const Login = ({ onLoginSuccess }) => {
 
   function handleLogin(e) {
     e.preventDefault();
-    console.log("Login form submitted!");
-   // setLoginError(null);
     axios
-      .post("http://127.0.0.1:8000/api/login", userData)
+      .post("http://127.0.0.1:8000/api/login", getPlainForm())
       .then((res) => {
         if (res.status === 200 && res.data.access_token) {
           window.sessionStorage.setItem("access_token", res.data.access_token);
@@ -46,18 +46,20 @@ const Login = ({ onLoginSuccess }) => {
             onLoginSuccess(res.data.user_type);
             navigate("/", { replace: true });
           }
-        } 
+        }
       })
       .catch((error) => {
-       /* console.log("Login error:", e.response?.data?.message || e.message);
+        /* console.log("Login error:", e.response?.data?.message || e.message);
         setLoginError(
           e.response?.data?.message || "An unexpected error occurred."
         );*/
 
         if (error.response && error.response.data.errors) {
           console.log(error);
-          const errorArray = typeof error.response.data.errors === "string" ?
-          [error.response.data.errors] : Object.values(error.response.data.errors).flat(); 
+          const errorArray =
+            typeof error.response.data.errors === "string"
+              ? [error.response.data.errors]
+              : Object.values(error.response.data.errors).flat();
           setMessages(errorArray);
           setTitle("Error");
         } else {
@@ -65,63 +67,59 @@ const Login = ({ onLoginSuccess }) => {
         }
         setErrorModal(true);
         console.error("Error login:", error);
-
-
       });
   }
 
   return (
-    <div className="login-page" >
-    <img
-      src={logo}
-      alt="logo"
-      style={{
-        position: 'absolute',
-        top: '20px',
-        left: '20px',
-        height: '50px',
-      }}
-    />
-    
+    <div className="login-page">
+      <img
+        src={logo}
+        alt="logo"
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          height: "50px",
+        }}
+      />
+
       <div className="center-form-container">
-      <form onSubmit={handleLogin}>
-      <h2 className="text-center fw-bold ">Login</h2>
-        <Form
-          fields={[
-            {
-              name: "email",
-              label: "Email",
-              type: "email",
-              required: true,
-              className:"small-input",
-            },
-            {
-              name: "password",
-              label: "Password",
-              type: "password",
-              required: true,
-              className:"small-input",
-            },
-          ]}
-          formData={userData}
-          handleInputChange={handleInputChange}
-        />
-        <button type="submit" className="btn btn-primary mt-3">
-          Login
-        </button>
-       
-      </form>
-      {ErrorModal && Messages && (
-        <AlertModal
-          title={Title}
-          message={Messages}
-          onClose={() => setErrorModal(false)}
-          type={Title}
-        />
-      )}
+        <form onSubmit={handleLogin}>
+          <h2 className="text-center fw-bold ">Login</h2>
+          <Form
+            fields={[
+              {
+                name: "email",
+                label: "Email",
+                type: "email",
+                required: true,
+                className: "small-input",
+              },
+              {
+                name: "password",
+                label: "Password",
+                type: "password",
+                required: true,
+                className: "small-input",
+              },
+            ]}
+            formData={userData}
+            handleInputChange={handleChange}
+          />
+          <button type="submit" className="btn btn-primary mt-3">
+            Login
+          </button>
+        </form>
+        {ErrorModal && Messages && (
+          <AlertModal
+            title={Title}
+            message={Messages}
+            onClose={() => setErrorModal(false)}
+            type={Title}
+          />
+        )}
+      </div>
     </div>
-    </div>
-  
   );
 };
 

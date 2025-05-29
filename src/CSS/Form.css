@@ -1,5 +1,8 @@
-label-size{
-    width: 90%;
-    max-width: 400px;
-    box-sizing: border-box;
+label-size {
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+form-control {
+  width: 100%;
 }

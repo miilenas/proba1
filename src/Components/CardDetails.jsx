@@ -29,7 +29,7 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
     amount: "",
     description: "",
     category_id: "",
-  }); 
+  });
   const [messages, setMessages] = useState(null);
   const [title, setTitle] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -53,11 +53,35 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
           }
         )
         .then((response) => {
-           const incomeTransactions = response?.data?.transactions ?? [];
-          const totalIncome = incomeTransactions.reduce(
-            (sum, transaction) => sum + parseFloat(transaction.amount),
-            0
-          );
+          const incomeTransactions = response?.data?.transactions ?? [];
+
+          const totalIncome = incomeTransactions.reduce((sum, transaction) => {
+            const amount = parseFloat(transaction.amount);
+            if (isNaN(amount)) return sum;
+
+            const sameUser =
+              transaction.sender?.jmbg === transaction.receiver?.jmbg;
+
+            if (sameUser) {
+              const senderCurrency = transaction.sender_account?.currency;
+              const receiverCurrency = transaction.receiver_account?.currency;
+
+              const senderRate = parseFloat(
+                senderCurrency?.exchange_rate || "1"
+              );
+              const receiverRate = parseFloat(
+                receiverCurrency?.exchange_rate || "1"
+              );
+
+              if (!isNaN(senderRate) && !isNaN(receiverRate)) {
+                const converted = amount * (senderRate / receiverRate);
+                return sum + converted;
+              }
+            }
+
+            return sum + amount;
+          }, 0);
+
           setIncome(parseFloat(totalIncome.toFixed(2)));
 
           axios
@@ -75,31 +99,12 @@ const CardDetails = ({ account, accounts, token, fetchAccounts }) => {
               }
             )
             .then((outgoingResponse) => {
-             /* console.log(outgoingResponse);
               const outgoingTransactions = outgoingResponse.data.transactions;
               const totalOutgoing = outgoingTransactions.reduce(
                 (sum, transaction) => sum + parseFloat(transaction.amount),
                 0
               );
               setOutgoing(totalOutgoing);
-            }) */
-           
-              console.log(outgoingResponse);
-              const outgoingTransactions = outgoingResponse?.data?.transactions ?? [];
-            const totalOutgoing = outgoingTransactions.reduce((sum, transaction) => {
-                const amount = parseFloat(transaction.amount);
-                if (transaction.sender?.jmbg==transaction.receiver?.jmbg){
-                  const receiverCurrency = transaction.account?.currency;
-                  const receiverExchangeRate = parseFloat((receiverCurrency?.exchange_rate)) || 1;
-                  const senderExchangeRate = parseFloat(account.currency?.exchange_rate) || 1;
-            
-                  const convertedAmount = amount * (receiverExchangeRate / senderExchangeRate);
-                  return sum + convertedAmount;
-                }
-                return sum +amount;
-              }, 0);
-          
-              setOutgoing(parseFloat(totalOutgoing.toFixed(2)));
             })
             .catch((error) => {
               console.error("Error fetching outgoing transactions:", error);

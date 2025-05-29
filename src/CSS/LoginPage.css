@@ -1,26 +1,25 @@
-.login-page{
-   background-image: url("../Images/logt.jpg");
-    background-color: #36a3eb75;
-    background-size: cover;  
-    background-position: center; 
-    background-repeat: no-repeat;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.login-page {
+  background-image: url("../Images/logt.jpg");
+  background-color: #36a3eb75;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .center-form-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
-    height: 70vh; 
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  width: 40%;
+}
 
-  .small-input {
-    width: 500px !important;
-    padding: 5px;
-    font-size: 14px;
-  }
-  
+.small-input {
+  width: 500px !important;
+  padding: 5px;
+  font-size: 14px;
+}

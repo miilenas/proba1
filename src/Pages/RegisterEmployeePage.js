@@ -2,28 +2,28 @@ import React, { useState } from "react";
 import axios from "axios";
 import Form from "../Components/Form";
 import AlertModal from "../Components/AlertModal";
-
+import { usePlainTextForm } from "../Hooks/usePlainTextForm.ts";
 const RegisterEmployeePage = () => {
-  const [formData, setFormData] = useState({
+  const {
+    form: formData,
+    handleChange,
+    getPlainForm,
+  } = usePlainTextForm({
     email: "",
     password: "",
     role: "support",
   });
+
   const [showErrorModal, setShowErrorModal] = useState("");
   const [messages, setMessages] = useState(null);
-  const[title, setTitle]=useState("");
+  const [title, setTitle] = useState("");
   const [showForm, setShowForm] = useState(true);
   const token = window.sessionStorage.getItem("access_token");
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-   /* if (!formData.email || !formData.password || !formData.role) {
+    /* if (!formData.email || !formData.password || !formData.role) {
       setMessages("Fill in all fields!");
       setTitle("Error");
       setShowErrorModal(true);
@@ -33,7 +33,7 @@ const RegisterEmployeePage = () => {
     console.log("Sending data:", formData);
 
     axios
-      .post("http://127.0.0.1:8000/api/register", formData, {
+      .post("http://127.0.0.1:8000/api/register", getPlainForm(), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -71,10 +71,12 @@ const RegisterEmployeePage = () => {
   };
 
   return (
-      <div className="center-form-container">
+    <div className="center-form-container">
       {showForm && (
         <form onSubmit={handleRegister}>
-          <h2 className="text-center" style={{color: "#0056b3"}}>Register Employee</h2>
+          <h2 className="text-center" style={{ color: "#0056b3" }}>
+            Register Employee
+          </h2>
           <Form
             fields={[
               { name: "email", label: "Email", type: "email", required: true },
@@ -95,15 +97,19 @@ const RegisterEmployeePage = () => {
               },
             ]}
             formData={formData}
-            handleInputChange={handleInputChange}
+            handleInputChange={handleChange}
           />
 
-          <button type="submit" className="btn btn-primary mt-3 button-blue d-block mx-auto" style={{position: "centered"}}>
+          <button
+            type="submit"
+            className="btn btn-primary mt-3 button-blue d-block mx-auto"
+            style={{ position: "centered" }}
+          >
             Register
           </button>
         </form>
       )}
-       {showErrorModal && messages && (
+      {showErrorModal && messages && (
         <AlertModal
           title={title}
           message={messages}
