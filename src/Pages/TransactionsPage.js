@@ -4,6 +4,7 @@ import axios from "axios";
 import Pagination from "react-bootstrap/Pagination";
 
 const TransactionPage = () => {
+   const userId = sessionStorage.getItem("user_id");
   const token = sessionStorage.getItem("access_token");
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -297,6 +298,7 @@ const TransactionPage = () => {
               <td>{transaction.status}</td>
               <td>{transaction.scope}</td>
               <td>
+                 {transaction.sender.id.toString() === userId ? ( 
                 <button
                   className="btn"
                   style={{
@@ -307,6 +309,7 @@ const TransactionPage = () => {
                 >
                   Download PDF
                 </button>
+                 ):null}
               </td>
             </tr>
           ))}

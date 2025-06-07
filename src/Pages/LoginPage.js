@@ -37,6 +37,8 @@ const Login = ({ onLoginSuccess }) => {
         if (res.status === 200 && res.data.access_token) {
           window.sessionStorage.setItem("access_token", res.data.access_token);
           window.sessionStorage.setItem("user_type", res.data.user_type);
+          window.sessionStorage.setItem("user_id", res.data.user_id);
+        
           console.log("Access token saved in sessionStorage");
           if (onLoginSuccess) {
             console.log(
